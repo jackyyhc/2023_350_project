@@ -1,0 +1,15 @@
+/* table css with border*/
+table {
+    width: 100%;
+    color: #588c7e;
+    font-family: monospace;
+    /* border */
+    border: 1px solid #ddd;
+    /* inner border */
+    border-style: dotted;
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }

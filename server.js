@@ -10,7 +10,8 @@ const { response } = require("express");
 // Set up the view engine
 app.set("view engine", "ejs");
 
-
+// Set up the static directory
+app.use(express.static(__dirname + '/public'));
 
 const connection = mysql.createConnection({
   host: "139.162.49.133",
@@ -47,7 +48,7 @@ app.post('/login', (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
   // const sql = "SELECT * FROM 350_group_project_1.user where username = ? and password = ?";
-  const sql = 'SELECT * FROM 350_group_project_1.user where username = ? and password = ?';
+  let sql = 'SELECT * FROM 350_group_project_1.user where username = ? and password = ?';
   connection.query(sql, [username, password], (error, results, fields) => {
     // [username, password],
     if (error) throw error;
@@ -66,8 +67,9 @@ app.post('/login', (req, res) => {
 
 app.get('/home', (req, res) => {
   if (req.session.authenticated) {
+    const username = req.session.username;
     if (req.session.role == 'student') {
-      const username = req.session.username;
+      
       let sql = 'SELECT * FROM 350_group_project_1.academic_records where student_id = ? ORDER BY term asc, program_id asc';
       connection.query(sql, [username], (error, results, fields) => {
         console.log(results);
@@ -84,9 +86,24 @@ app.get('/home', (req, res) => {
   }
       })
   }
+  if (req.session.role == 'teacher') {
+    let sql = 'SELECT * FROM 350_group_project_1.academic_records ORDER BY student_id asc, program_id asc';
+      connection.query(sql, [username], (error, results, fields) => {
+        console.log(results);
+        // [username, password],
+        if (error) throw error;
+        else 
+        {
+    res.render('teacher_home.ejs',
+    {
+      username: req.session.username,
+      role: req.session.role,
+      results: results,
+    });
+  }
+})
 }
-}
-);
+  }});
 // Route to fetch data from the database
 app.get("/api/user", (req, res) => {
   // Perform a database query
