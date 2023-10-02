@@ -5,7 +5,6 @@ const session = require('cookie-session');
 const bodyParser = require('body-parser');
 const app = express();
 
-const account = require("./model/account.js");
 const { response } = require("express");
 
 // Set up the view engine
