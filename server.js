@@ -39,7 +39,12 @@ app.get("/", (req, res) => {
   console.log(req.session);
   if (!req.session.authenticated) {
     res.render('login.ejs');
-  };
+  } else if (req.session.role == 'teacher') {
+    res.redirect('/home');
+  }
+  else if(req.session.role == 'student'){
+    res.redirect('/home');
+  }
 
 });
 
