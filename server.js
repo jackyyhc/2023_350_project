@@ -39,23 +39,20 @@ app.get("/", (req, res) => {
   console.log(req.session);
   if (!req.session.authenticated) {
     res.render('login.ejs');
-  } else if (req.session.role == 'teacher') {
+  } else if (req.session.role == 'teacher' || req.session.role == 'student') {
     res.redirect('/home');
   }
-  else if(req.session.role == 'student'){
-    res.redirect('/home');
+  else {
+    res.redirect('/');
   }
-
 });
 
 app.post('/login', (req, res) => {
   console.log(req.body);
   const username = req.body.username;
   const password = req.body.password;
-  // const sql = "SELECT * FROM 350_group_project_1.user where username = ? and password = ?";
   let sql = 'SELECT * FROM 350_group_project_1.user where username = ? and password = ?';
   connection.query(sql, [username, password], (error, results, fields) => {
-    // [username, password],
     if (error) throw error;
     if (results.length > 0) {
       // set session and role
@@ -69,46 +66,40 @@ app.post('/login', (req, res) => {
   });
 });
 
-
 app.get('/home', (req, res) => {
   if (req.session.authenticated) {
     const username = req.session.username;
     if (req.session.role == 'student') {
-      
       let sql = 'SELECT * FROM 350_group_project_1.academic_records where student_id = ? ORDER BY term asc, program_id asc';
       connection.query(sql, [username], (error, results, fields) => {
-        console.log(results);
-        // [username, password],
         if (error) throw error;
-        else 
-        {
+        else {
           res.render('student_home.ejs',
-          {
-            username: req.session.username,
-            role: req.session.role,
-            results: results
-          });
-  }
+            {
+              username: req.session.username,
+              role: req.session.role,
+              results: results
+            });
+        }
       })
-  }
-  if (req.session.role == 'teacher') {
-    let sql = 'SELECT * FROM 350_group_project_1.academic_records ORDER BY student_id asc, program_id asc';
+    }
+    if (req.session.role == 'teacher') {
+      let sql = 'SELECT * FROM 350_group_project_1.academic_records ORDER BY student_id asc, program_id asc';
       connection.query(sql, [username], (error, results, fields) => {
-        console.log(results);
-        // [username, password],
         if (error) throw error;
-        else 
-        {
-    res.render('teacher_home.ejs',
-    {
-      username: req.session.username,
-      role: req.session.role,
-      results: results,
-    });
+        else {
+          res.render('teacher_home.ejs',
+            {
+              username: req.session.username,
+              role: req.session.role,
+              results: results,
+            });
+        }
+      })
+    }
   }
-})
-}
-  }});
+});
+
 // Route to fetch data from the database
 app.get("/api/user", (req, res) => {
   // Perform a database query
