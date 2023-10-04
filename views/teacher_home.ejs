@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,40 +9,66 @@
     <!-- add css -->
     <link rel="stylesheet" href="/css/style.css">
 </head>
+
 <body>
     <h1>dashboard</h1>
-    <h2>hello, <%= username %></h2>
-    <p><% results%></p>
+    <h2>hello, <%= username %>
+    </h2>
+    <p>
+        <% results%>
+    </p>
     <a href="/logout">logout</a>
-
-        <!-- table to show results -->
-        <table>
-            <thead>
+    <div class="search">
+        <form action="/search" method="POST">
+            <input type="text" name="search" placeholder="search by course code">
+            <button type="submit">search</button>
+        </form>
+    </div>
+    <!-- table to show results -->
+    <table>
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Course Code</th>
+                <th>Course Name</th>
+                <th>Year</th>
+                <th>Term</th>
+                <th>Credit</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% results.forEach(function(data){ %>
                 <tr>
-                    <th>Student ID</th>
-                    <th>Course Code</th>
-                    <th>Course Name</th>
-                    <th>Term</th>
-                    <th>Credit</th>
-                    <th>Grade</th>
+                    <td>
+                        <%= data.student_id %>
+                    </td>
+                    <td>
+                        <%= data.program_id %>
+                    </td>
+                    <td>
+                        <%= data.course_name %>
+                    </td>
+                    <td>
+                        <%= data.year %>
+                    </td>
+                    <td>
+                        <%= data.term %>
+                    </td>
+                    <td>
+                        <%= data.credit %>
+                    </td>
+                    <td>
+                        <%= data.grade %>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                <% results.forEach(function(data){ %>
-                    <tr>
-                        <td><%= data.student_id %></td>
-                        <td><%= data.program_id %></td>
-                        <td><%= data.course_name %></td>
-                        <td><%= data.term %></td>
-                        <td><%= data.credit %></td>
-                        <td><%= data.grade %></td>
-                    </tr>
                 <% }) %>
-            </tbody>
+        </tbody>
 
 
-        </table>
-    </div> 
+    </table>
+    </div>
 
 </body>
+
 </html>

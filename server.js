@@ -67,8 +67,8 @@ app.post("/search", (req, res) => {
       })
     }
     if (req.session.role == 'teacher') {
-      let sql = 'SELECT * FROM 350_group_project_1.academic_records ORDER BY student_id asc, program_id asc';
-      connection.query(sql, [username], (error, results, fields) => {
+      let sql = 'SELECT * FROM 350_group_project_1.academic_records where program_id like ? ORDER BY term asc, program_id asc';
+      connection.query(sql, ["%"+req.body.search+"%"], (error, results, fields) => {
         if (error) throw error;
         else {
           res.render('teacher_home.ejs',
