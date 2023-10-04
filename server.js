@@ -47,6 +47,43 @@ app.get("/", (req, res) => {
   }
 });
 
+app.post("/search", (req, res) => {
+  console.log(req.body);
+  console.log("%"+req.body.search+"%")
+  if (req.session.authenticated) {
+    const username = req.session.username;
+    if (req.session.role == 'student') {
+      let sql = 'SELECT * FROM 350_group_project_1.academic_records where student_id = ? and program_id like ? ORDER BY term asc, program_id asc';
+      connection.query(sql, [username,"%"+req.body.search+"%"], (error, results, fields) => {
+        if (error) throw error;
+        else {
+          res.render('student_home.ejs',
+            {
+              username: req.session.username,
+              role: req.session.role,
+              results: results
+            });
+        }
+      })
+    }
+    if (req.session.role == 'teacher') {
+      let sql = 'SELECT * FROM 350_group_project_1.academic_records ORDER BY student_id asc, program_id asc';
+      connection.query(sql, [username], (error, results, fields) => {
+        if (error) throw error;
+        else {
+          res.render('teacher_home.ejs',
+            {
+              username: req.session.username,
+              role: req.session.role,
+              results: results,
+            });
+        }
+      })
+    }
+  }
+});
+
+
 app.post('/login', (req, res) => {
   console.log(req.body);
   const username = req.body.username;
