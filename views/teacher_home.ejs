@@ -17,7 +17,16 @@
     <p>
         <% results%>
     </p>
-    <a href="/logout">logout</a>
+    <div class="logout">
+        <form action="/logout" method="GET">
+            <button type="submit">logout</button>
+        </form>
+    </div>
+    <div class="personal_info">
+        <form action="/personal_information" method="GET">
+            <button type="submit">personal information</button>
+        </form>
+    </div>
     <div class="search">
         <form action="/search" method="POST">
             <input type="text" name="search" placeholder="search by course code">
