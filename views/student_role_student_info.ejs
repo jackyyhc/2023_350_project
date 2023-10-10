@@ -6,7 +6,12 @@
   </head>
   <body>
     <h1>Student Information</h1>
-
+    <!-- if have message -->
+    <!-- message is not defined -->
+    <% if (typeof message !== 'undefined') { %>
+        <p><%= message %></p>
+    <% } %>
+<!-- form of student information -->
     <form method="POST" action="/submit-student-info">
         <table>
             <tr>
@@ -46,7 +51,6 @@
                 <td><button type="reset">Reset</button></td>
             </tr>
         </table>
-    </form>
     </form>
   </body>
 </html>

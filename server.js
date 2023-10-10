@@ -46,12 +46,13 @@ app.get("/", (req, res) => {
     res.redirect('/');
   }
 });
+
 app.post("/password_modification", (req, res) => {
   if (!req.session.authenticated) {
     res.redirect('/');
   } else if (req.session.role == 'teacher' || req.session.role == 'student') {
     let sql = 'select password from 350_group_project_1.user where username = ?;';
-    connection.query(sql,[req.body.student_id], (error, results, fields) => {
+    connection.query(sql, [req.body.student_id], (error, results, fields) => {
       if (error) throw error;
       const orginal_pw = results[0].password;
       const username = req.body.student_id;
@@ -81,16 +82,14 @@ app.post("/password_modification", (req, res) => {
   }
 }
 );
+
 app.post("/submit-student-info", (req, res) => {
   if (!req.session.authenticated) {
     res.redirect('/');
   } else if (req.session.role == 'teacher' || req.session.role == 'student') {
     let sql = 'select * from 350_group_project_1.student_personal_information where username = ?;';
-    connection.query(sql,[req.body.username], (error, results, fields) => {
-      console.log(results[0]);
-      console.log(req.body);
+    connection.query(sql, [req.body.username], (error, results, fields) => {
       // compare the data in database and the data user input
-
       if (results[0].first_name != req.body.first_name || results[0].last_name != req.body.last_name || results[0].phone_no != req.body.phone_no || results[0].ec_name != req.body.ec_name || results[0].ec_phone_no != req.body.ec_phone_no || results[0].ec_relation != req.body.ec_relation) {
         let sql = 'SET SQL_SAFE_UPDATES=0;UPDATE 350_group_project_1.student_personal_information SET first_name = ?, last_name = ?, phone_no = ?, ec_name = ?, ec_phone_no = ?, ec_relation = ? WHERE username = ?;SET SQL_SAFE_UPDATES=1;';
         connection.query(sql, [req.body.first_name, req.body.last_name, req.body.phone_no, req.body.ec_name, req.body.ec_phone_no, req.body.ec_relation, req.body.username], (error, results, fields) => {
@@ -100,7 +99,8 @@ app.post("/submit-student-info", (req, res) => {
               {
                 username: req.session.username,
                 role: req.session.role,
-                results: req.body
+                results: req.body,
+                message: "Update successfully!"
               });
           }
           else {
@@ -108,15 +108,14 @@ app.post("/submit-student-info", (req, res) => {
           }
         })
       }
-      else{
+      else {
         res.redirect('/personal_information');
       }
-      })
+    })
   }
-
-
 }
 );
+
 app.post("/search", (req, res) => {
   if (req.session.authenticated) {
     const username = req.session.username;
