@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+  </head>
+  <body>
+    <h1>Student Information</h1>
+
+    <form method="POST" action="/submit-student-info">
+        <table>
+            <tr>
+                <th>Field</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>Username</td>
+                <td><input type="text" name="username" value="<%= results.username %>"></td>
+            </tr>
+            <tr>
+                <td>Last Name</td>
+                <td><input type="text" name="last_name" value="<%= results.last_name %>"></td>
+            </tr>
+            <tr>
+                <td>First Name</td>
+                <td><input type="text" name="first_name" value="<%= results.first_name %>"></td>
+            </tr>
+            <tr>
+                <td>Phone Number</td>
+                <td><input type="text" name="phone_no" value="<%= results.phone_no %>"></td>
+            </tr>
+            <tr>
+                <td>Emergency Contact Name</td>
+                <td><input type="text" name="ec_name" value="<%= results.ec_name %>"></td>
+            </tr>
+            <tr>
+                <td>Emergency Contact Phone Number</td>
+                <td><input type="text" name="ec_phone_no" value="<%= results.ec_phone_no %>"></td>
+            </tr>
+            <tr>
+                <td>Emergency Contact Relation</td>
+                <td><input type="text" name="ec_relation" value="<%= results.ec_relation %>"></td>
+            </tr>
+            <tr>
+                <td><button type="submit">Submit</button></td>
+                <td><button type="reset">Reset</button></td>
+            </tr>
+        </table>
+    </form>
+    </form>
+  </body>
+</html>

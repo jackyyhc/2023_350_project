@@ -13,3 +13,11 @@ table, th, td {
     border: 1px solid black;
     border-collapse: collapse;
   }
+
+  /* add input field to be transpant */
+input[type=text] {
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid black;
+    width: 100%;
+  }
