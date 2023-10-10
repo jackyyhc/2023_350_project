@@ -58,20 +58,20 @@ app.post("/password_modification", (req, res) => {
       const username = req.body.student_id;
       const password = req.body.new_password;
       if (req.body.password != orginal_pw) {
-        res.render('password_org_wrong.ejs');
+        res.render('password_issue.ejs', {message: "Password Incorrect"});
       }
       else if (req.body.new_password != req.body.confirm_password) {
-        res.render('password_not_match.ejs');
+        res.render('password_issue.ejs', {message: "Password Incorrect"});
       }
       else if (req.body.new_password == "" || password.length < 8) {
-        res.render('password_not_sat_rule.ejs')
+        res.render('password_issue.ejs', {message: "Password Not Satisfied Rule"});
       }
       else {
         let sql = 'SET SQL_SAFE_UPDATES=0;UPDATE 350_group_project_1.user SET password = ? WHERE username = ?;SET SQL_SAFE_UPDATES=1;';
         connection.query(sql, [password, username], (error, results, fields) => {
           if (error) throw error;
           if (results[1].affectedRows) {
-            res.render('password_success_change.ejs');
+            res.render('password_issue.ejs', {message: "Password Change Successful"});
           }
           else {
             res.redirect('/');
