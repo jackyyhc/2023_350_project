@@ -46,15 +46,50 @@ app.get("/", (req, res) => {
     res.redirect('/');
   }
 });
+app.post("/password_modification", (req, res) => {
+  if (!req.session.authenticated) {
+    res.redirect('/');
+  } else if (req.session.role == 'teacher' || req.session.role == 'student') {
+    let sql = 'select password from 350_group_project_1.user where username = 12000000;';
+      connection.query(sql, (error, results, fields) => {
+        if (error) throw error;
+        const orginal_pw = results[0].password;
+        const username = req.body.student_id;
+        const password = req.body.new_password;
+        if (req.body.password != orginal_pw) {
+          res.render('password_org_wrong.ejs');
+        }
+        else if (req.body.new_password != req.body.confirm_password) {
+          res.render('password_not_match.ejs');
+        }
+        else if(req.body.new_password == "" || password.length<8){
+          res.render('password_not_sat_rule.ejs')
+        }
+        else {
+          let sql = 'SET SQL_SAFE_UPDATES=0;UPDATE 350_group_project_1.user SET password = ? WHERE username = ?;SET SQL_SAFE_UPDATES=1;';
+          connection.query(sql, [password, username], (error, results, fields) => {
+            if (error) throw error;
+            if (results[1].affectedRows) {
+              res.render('success_change.ejs');
+            }
+            else {
+              res.redirect('/');
+            }
+          })
+        }
+      })
+    
+
+  }
+}
+);
 
 app.post("/search", (req, res) => {
-  console.log(req.body);
-  console.log("%"+req.body.search+"%")
   if (req.session.authenticated) {
     const username = req.session.username;
     if (req.session.role == 'student') {
       let sql = 'SELECT * FROM 350_group_project_1.academic_records where student_id = ? and program_id like ? ORDER BY term asc, program_id asc';
-      connection.query(sql, [username,"%"+req.body.search+"%"], (error, results, fields) => {
+      connection.query(sql, [username, "%" + req.body.search + "%"], (error, results, fields) => {
         if (error) throw error;
         else {
           res.render('student_home.ejs',
@@ -68,7 +103,7 @@ app.post("/search", (req, res) => {
     }
     if (req.session.role == 'teacher') {
       let sql = 'SELECT * FROM 350_group_project_1.academic_records where program_id like ? ORDER BY term asc, program_id asc';
-      connection.query(sql, ["%"+req.body.search+"%"], (error, results, fields) => {
+      connection.query(sql, ["%" + req.body.search + "%"], (error, results, fields) => {
         if (error) throw error;
         else {
           res.render('teacher_home.ejs',
@@ -104,7 +139,10 @@ app.post('/login', (req, res) => {
 });
 
 app.get('/home', (req, res) => {
-  if (req.session.authenticated) {
+  if (!req.session.authenticated) {
+    res.redirect('/');
+  }
+  else if (req.session.authenticated) {
     const username = req.session.username;
     if (req.session.role == 'student') {
       let sql = 'SELECT * FROM 350_group_project_1.academic_records where student_id = ? ORDER BY term asc, program_id asc';
@@ -120,7 +158,7 @@ app.get('/home', (req, res) => {
         }
       })
     }
-    if (req.session.role == 'teacher') {
+    else if (req.session.role == 'teacher') {
       let sql = 'SELECT * FROM 350_group_project_1.academic_records ORDER BY student_id asc, program_id asc';
       connection.query(sql, [username], (error, results, fields) => {
         if (error) throw error;
@@ -136,6 +174,22 @@ app.get('/home', (req, res) => {
     }
   }
 });
+
+app.get('/password', (req, res) => {
+  if (!req.session.authenticated) {
+    res.redirect('/');
+  }
+  else if (req.session.authenticated) {
+    res.render('password_modification.ejs',
+      {
+        username: req.session.username,
+        role: req.session.role,
+      });
+  }
+})
+
+
+
 
 // Route to fetch data from the database
 app.get("/api/user", (req, res) => {
