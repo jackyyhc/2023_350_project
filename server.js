@@ -51,35 +51,33 @@ app.post("/password_modification", (req, res) => {
     res.redirect('/');
   } else if (req.session.role == 'teacher' || req.session.role == 'student') {
     let sql = 'select password from 350_group_project_1.user where username = 12000000;';
-      connection.query(sql, (error, results, fields) => {
-        if (error) throw error;
-        const orginal_pw = results[0].password;
-        const username = req.body.student_id;
-        const password = req.body.new_password;
-        if (req.body.password != orginal_pw) {
-          res.render('password_org_wrong.ejs');
-        }
-        else if (req.body.new_password != req.body.confirm_password) {
-          res.render('password_not_match.ejs');
-        }
-        else if(req.body.new_password == "" || password.length<8){
-          res.render('password_not_sat_rule.ejs')
-        }
-        else {
-          let sql = 'SET SQL_SAFE_UPDATES=0;UPDATE 350_group_project_1.user SET password = ? WHERE username = ?;SET SQL_SAFE_UPDATES=1;';
-          connection.query(sql, [password, username], (error, results, fields) => {
-            if (error) throw error;
-            if (results[1].affectedRows) {
-              res.render('success_change.ejs');
-            }
-            else {
-              res.redirect('/');
-            }
-          })
-        }
-      })
-    
-
+    connection.query(sql, (error, results, fields) => {
+      if (error) throw error;
+      const orginal_pw = results[0].password;
+      const username = req.body.student_id;
+      const password = req.body.new_password;
+      if (req.body.password != orginal_pw) {
+        res.render('password_org_wrong.ejs');
+      }
+      else if (req.body.new_password != req.body.confirm_password) {
+        res.render('password_not_match.ejs');
+      }
+      else if (req.body.new_password == "" || password.length < 8) {
+        res.render('password_not_sat_rule.ejs')
+      }
+      else {
+        let sql = 'SET SQL_SAFE_UPDATES=0;UPDATE 350_group_project_1.user SET password = ? WHERE username = ?;SET SQL_SAFE_UPDATES=1;';
+        connection.query(sql, [password, username], (error, results, fields) => {
+          if (error) throw error;
+          if (results[1].affectedRows) {
+            res.render('password_success_change.ejs');
+          }
+          else {
+            res.redirect('/');
+          }
+        })
+      }
+    })
   }
 }
 );
@@ -188,9 +186,6 @@ app.get('/password', (req, res) => {
   }
 })
 
-
-
-
 // Route to fetch data from the database
 app.get("/api/user", (req, res) => {
   // Perform a database query
@@ -204,6 +199,7 @@ app.get("/api/user", (req, res) => {
     res.send(results);
   });
 });
+
 // Route to fetch data from the database
 app.get("/api/academic_record", (req, res) => {
   var search_string = ""
