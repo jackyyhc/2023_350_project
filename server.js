@@ -61,7 +61,7 @@ app.post("/password_modification", (req, res) => {
         res.render('password_issue.ejs', {message: "Password Incorrect"});
       }
       else if (req.body.new_password != req.body.confirm_password) {
-        res.render('password_issue.ejs', {message: "Password Incorrect"});
+        res.render('password_issue.ejs', {message: "Password Not Match"});
       }
       else if (req.body.new_password == "" || password.length < 8) {
         res.render('password_issue.ejs', {message: "Password Not Satisfied Rule"});
@@ -302,6 +302,6 @@ app.get('/logout', (req, res) => {
 });
 
 // Start the server on port 3000
-app.listen(3000, () => {
+app.listen(80, () => {
   console.log("Server started on port 3000");
 });
