@@ -1,0 +1,41 @@
+
+<header>
+    <%- include('stu_navbar') %>
+</header>
+
+<body>
+  
+  <div>
+    <h4>Academic Record</h4>
+    <p><% results%></p>
+    <!-- table to show results -->
+    <table class="table">
+      <thead>
+        <tr class="table-secondary">
+          <th scope="col">Course Code</th>
+          <th scope="col">Name</th>
+          <th scope="col">Year</th>
+          <th scope="col">Term</th>
+          <th scope="col">Credit</th>
+          <th scope="col">Grade</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% results.forEach(function(data){ %>
+        <tr>
+          <td><%= data.courseCode %></td>
+          <td><%= data.courseName %></td>
+          <td><%= data.studyYear %></td>
+          <td><%= data.term %></td>
+          <td><%= data.credit %></td>
+          <td><%= data.grade %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</body>
+
+<footer>
+  <%- include('footer') %>
+</footer>
