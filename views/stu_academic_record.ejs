@@ -7,17 +7,26 @@
   
   <div>
     <h4>Academic Record</h4>
-    <p><% results%></p>
+    <div class="dropdown">
+      <button class="btn dropdown-toggle" type="button" id="semFilter" data-bs-toggle="dropdown" aria-expanded="false">
+          Semester
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="semFilter">
+          <li><button class="dropdown-item" value="*" type="button">All</button></li>
+          <% merge_term.forEach(function(data){ %>
+          <li><button class="dropdown-item" value="<%= data.merge_term %>" type="button"><%= data.merge_term %></button></li>
+          <% }) %>
+      </ul>
+  </div>
     <!-- table to show results -->
     <table class="table">
       <thead>
         <tr class="table-secondary">
-          <th scope="col">Course Code</th>
-          <th scope="col">Name</th>
-          <th scope="col">Year</th>
-          <th scope="col">Term</th>
-          <th scope="col">Credit</th>
-          <th scope="col">Grade</th>
+          <th scope="col" onclick="sortTable(0)">Course Code</th>
+          <th scope="col" onclick="sortTable(1)">Name</th>
+          <th scope="col" onclick="sortTable(2)">Term</th>
+          <th scope="col" onclick="sortTable(3)">Credit</th>
+          <th scope="col" onclick="sortTable(4)">Grade</th>
         </tr>
       </thead>
       <tbody>
@@ -25,8 +34,7 @@
         <tr>
           <td><%= data.courseCode %></td>
           <td><%= data.courseName %></td>
-          <td><%= data.studyYear %></td>
-          <td><%= data.term %></td>
+          <td><%= data.merge_term %></td>
           <td><%= data.credit %></td>
           <td><%= data.grade %></td>
         </tr>
@@ -35,7 +43,77 @@
     </table>
   </div>
 </body>
-
+<script>
+// filter by semester
+// use javascript to filter the table
+$(document).ready(function(){
+  $(".dropdown-item").click(function(){
+    var value = $(this).val();
+    if(value == "*"){
+      $("tbody tr").show();
+    }else{
+      $("tbody tr").filter(function(){
+        $(this).toggle($(this).text().indexOf(value) > -1)
+      });
+    }
+  });
+});
+// sort table
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.querySelector("table");
+  switching = true;
+  // Set the sorting direction to ascending:
+  dir = "asc"; 
+  /* Make a loop that will continue until
+  no switching has been done: */
+  while (switching) {
+      // Start by saying: no switching is done:
+      switching = false;
+      rows = table.rows;
+      /* Loop through all table rows (except the
+      first, which contains table headers): */
+      for (i = 1; i < (rows.length - 1); i++) {
+          // Start by saying there should be no switching:
+          shouldSwitch = false;
+          /* Get the two elements you want to compare,
+          one from current row and one from the next: */
+          x = rows[i].getElementsByTagName("TD")[n];
+          y = rows[i + 1].getElementsByTagName("TD")[n];
+          /* Check if the two rows should switch place,
+          based on the direction, asc or desc: */
+          if (dir == "asc") {
+              if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                  // If so, mark as a switch and break the loop:
+                  shouldSwitch = true;
+                  break;
+              }
+          } else if (dir == "desc") {
+              if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                  // If so, mark as a switch and break the loop:
+                  shouldSwitch = true;
+                  break;
+              }
+          }
+      }
+      if (shouldSwitch) {
+          /* If a switch has been marked, make the switch
+          and mark that a switch has been done: */
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+          // Each time a switch is done, increase this count by 1:
+          switchcount ++; 
+      } else {
+          /* If no switching has been done AND the direction is "asc",
+          set the direction to "desc" and run the while loop again. */
+          if (switchcount == 0 && dir == "asc") {
+              dir = "desc";
+              switching = true;
+          }
+      }
+  }
+}
+</script>
 <footer>
   <%- include('footer') %>
 </footer>
