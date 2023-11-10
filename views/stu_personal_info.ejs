@@ -1,0 +1,69 @@
+<body>
+    <header>
+        <!-- navbar -->
+        <%- include('stu_navbar') %>
+    </header>
+    <!-- content -->
+    <h1>Personal Information</h1>
+    <div class="container-fluid">
+      <form action="/action_page.php">
+        <div class="row mb-3">
+          <label for="fName" class="col-sm-2 col-form-label">First Name:</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" value="Jill" id="fName" disabled>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label for="lName" class="col-sm-2 col-form-label">Last Name:</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" value="Smith" id="lName" disabled>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label for="gender" class="col-sm-2 col-form-label">Gender:</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" value="M" id="gender" disabled>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label for="phoneNo" class="col-sm-2 col-form-label">Phone Number:</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" value="12345678" id="phoneNo" disabled>
+          </div>
+          <div class="col">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editPhoneNo">Edit</button>
+          </div>
+          <!-- modal -->
+          <!-- 呢舊野想睇睇可唔可以變做function，reuse 響唔同form度, not rush-->
+          <div class="modal fade" id="editPhoneNo" tabindex="-1" aria-labelledby="editPhoneNoLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="editPhoneNoLabel">Update Information</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form>
+                    <div class="mb-3">
+                      <label for="newPhoneNoLabel" class="col-form-label">New phone number:</label>
+                      <textarea class="form-control" id="newPhoneNo"></textarea>
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Update</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  <footer>
+      <%- include('footer') %>
+  </footer> 
+</body>

@@ -180,8 +180,11 @@ app.get('/academic_record', (req, res) => {
   else if (req.session.authenticated) {
     const username = req.session.username;
     if (req.session.role == 'student') {
-      let sql = 'SELECT studytable.courseCode, course.courseName, CONCAT(studytable.studyYear," ", studytable.term) as merge_term, studytable.credit, studytable.grade FROM 350_group_project.Study AS studytable LEFT JOIN 350_group_project.Course AS course ON studytable.courseCode = course.courseCode WHERE userId = 12000000 ORDER BY studytable.studyYear ASC, studytable.courseCode ASC; select CONCAT(studyYear," ", term) as merge_term from 350_group_project.Study where userId = ? group by merge_term'
-      connection.query(sql, [username,username], (error, results, fields) => {
+
+      let sql = 'SELECT studytable.courseCode, course.courseName, CONCAT(studytable.studyYear," ", studytable.term) as merge_term, studytable.credit, studytable.grade FROM 350_group_project.Study AS studytable LEFT JOIN 350_group_project.Course AS course ON studytable.courseCode = course.courseCode WHERE userId = ? ORDER BY studytable.studyYear ASC, studytable.courseCode ASC; select CONCAT(studyYear," ", term) as merge_term from 350_group_project.Study where userId = ? group by merge_term;'
+      sql += "SELECT CONCAT(studytable.studyYear, ' ', studytable.term) AS merge_term, AVG(Gpa.gpa) AS average_gpa FROM 350_group_project.Study AS studytable LEFT JOIN 350_group_project.Gpa AS Gpa ON studytable.grade = Gpa.grade WHERE studytable.userId = ? GROUP BY merge_term;"
+      sql +="SELECT AVG(Gpa.gpa) AS average_gpa FROM 350_group_project.Study AS studytable LEFT JOIN 350_group_project.Gpa AS Gpa ON studytable.grade = Gpa.grade WHERE studytable.userId = ? GROUP BY studytable.userId;"
+      connection.query(sql, [username,username,username,username], (error, results, fields) => {
         if (error) throw error;
         else {
           console.log(results);
@@ -190,7 +193,9 @@ app.get('/academic_record', (req, res) => {
               username: req.session.username,
               role: req.session.role,
               results: results[0],
-              merge_term: results[1]
+              merge_term: results[1],
+              gpa: results[2],
+              cgpa: results[3][0],
             });
         }
       })

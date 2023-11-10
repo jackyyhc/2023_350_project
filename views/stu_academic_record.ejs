@@ -42,6 +42,25 @@
       </tbody>
     </table>
   </div>
+  <div>
+      <table class="table">
+        <thead>
+            <tr><th colspan="2">Statistics</th></tr></thead>
+        <tbody>
+        <% gpa.forEach(function(data){%>
+        <tr>
+            <th><%= data.merge_term %> GPA</th>
+            <td><%= data.average_gpa %></td>
+        </tr>
+        <%})%>
+        <tr>
+            <th>cGPA</th>
+            <td><%= cgpa.average_gpa%></td>
+        </tr>
+        </tbody>
+    </table>
+
+  </div>
 </body>
 <script>
 // filter by semester
