@@ -183,8 +183,8 @@ app.get('/academic_record', (req, res) => {
 
       let sql = 'SELECT studytable.courseCode, course.courseName, CONCAT(studytable.studyYear," ", studytable.term) as merge_term, studytable.credit, studytable.grade FROM 350_group_project.Study AS studytable LEFT JOIN 350_group_project.Course AS course ON studytable.courseCode = course.courseCode WHERE userId = ? ORDER BY studytable.studyYear ASC, studytable.courseCode ASC; select CONCAT(studyYear," ", term) as merge_term from 350_group_project.Study where userId = ? group by merge_term;'
       sql += "SELECT CONCAT(studytable.studyYear, ' ', studytable.term) AS merge_term, AVG(Gpa.gpa) AS average_gpa FROM 350_group_project.Study AS studytable LEFT JOIN 350_group_project.Gpa AS Gpa ON studytable.grade = Gpa.grade WHERE studytable.userId = ? GROUP BY merge_term;"
-      sql +="SELECT AVG(Gpa.gpa) AS average_gpa FROM 350_group_project.Study AS studytable LEFT JOIN 350_group_project.Gpa AS Gpa ON studytable.grade = Gpa.grade WHERE studytable.userId = ? GROUP BY studytable.userId;"
-      connection.query(sql, [username,username,username,username], (error, results, fields) => {
+      sql += "SELECT AVG(Gpa.gpa) AS average_gpa FROM 350_group_project.Study AS studytable LEFT JOIN 350_group_project.Gpa AS Gpa ON studytable.grade = Gpa.grade WHERE studytable.userId = ? GROUP BY studytable.userId;"
+      connection.query(sql, [username, username, username, username], (error, results, fields) => {
         if (error) throw error;
         else {
           console.log(results);
@@ -247,19 +247,48 @@ app.get('/home', (req, res) => {
   }
 });
 
+app.post("/personal_info", (req, res) => {
+  if (!req.session.authenticated) {
+    res.redirect('/');
+  }
+  else if (req.session.authenticated) {
+    console.log(req.body);
+    console.log("phone_number")
+    const username = req.body.username;
+    console.log(req.session)
+
+    let sql = 'SET SQL_SAFE_UPDATES=0;UPDATE 350_group_project.StudentInfo SET phoneNo = ? WHERE userId = ?;SET SQL_SAFE_UPDATES=1;';
+    connection.query(sql, [req.body.phoneNo, req.body.username], (error, results, fields) => {
+      if (error) throw error;
+      if (results[1].affectedRows) {
+        res.render('student_role_student_info.ejs',
+          {
+            username: req.session.username,
+            role: req.session.role,
+            results: req.body,
+            message: "Update successfully!"
+          });
+
+      }
+    })
+  }
+})
+
 app.get('/personal_information', (req, res) => {
   if (!req.session.authenticated) {
     res.redirect('/');
   }
   else if (req.session.authenticated) {
     const username = req.session.username;
+    console.log(username)
     if (req.session.role == 'student') {
-      let sql = 'SELECT * FROM 350_group_project.StudentInfo where username = ?;';
+      let sql = 'SELECT usertable.userfName, usertable.userlName, person_info_table.sex, person_info_table.phoneNo FROM 350_group_project.User as usertable inner join 350_group_project.StudentInfo as person_info_table ON usertable.userId = person_info_table.userId where usertable.userId = ?;';
       connection.query(sql, [username], (error, results, fields) => {
         if (error) throw error;
         else {
           // console.log(results);
-          res.render('student_role_student_info.ejs',
+          console.log(results);
+          res.render('stu_personal_info.ejs',
             {
               username: req.session.username,
               role: req.session.role,
