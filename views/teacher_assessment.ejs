@@ -18,10 +18,9 @@
     </div>
         <!-- listgroup to show results -->
         <div class="list-group">
-          <a href="#" class="list-group-item list-group-item-action">COMP101 </a>
-          <a href="#" class="list-group-item list-group-item-action">COMP102 </a>
-          <a href="#" class="list-group-item list-group-item-action">COMP203 </a>
-          <a href="#" class="list-group-item list-group-item-action">COMP202 </a>
+          <% results.forEach(function(data){ %>
+          <a href="#" class="list-group-item list-group-item-action"> <%= data.courseCode %> &emsp; <%= data.courseName %> &emsp; <%= data.teachYear %> <%= data.term %></a>
+        <% }) %>
         </div>
 
 </body>
