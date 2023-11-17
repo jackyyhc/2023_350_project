@@ -14,29 +14,13 @@
         <%- include('teacher_navbar') %>
     </header>
     <div><h4>Accessment</h4>
+      <h5>Teaching Course</h5>
     </div>
-        <!-- table to show results -->
-        <table class="table">
-            <thead>
-              <tr class="table-secondary">
-                <th scope="col">Course Code</th>
-                <th scope="col">Name</th>
-                <th scope="col">Term</th>
-                <th scope="col"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <% results.forEach(function(data){ %>
-              <tr>
-                <td><%= data.courseCode %></td>
-                <td><%= data.courseName %></td>
-                <td><%= data.merge_term %></td>
-                <td><%= data.credit %></td>
-                <td><%= data.grade %></td>
-              </tr>
-              <% }) %>
-            </tbody>
-          </table>
+        <!-- listgroup to show results -->
+        <div class="list-group">
+          <% results.forEach(function(data){ %>
+          <a href="#" class="list-group-item list-group-item-action"> <%= data.courseCode %> &emsp; <%= data.courseName %> &emsp; <%= data.teachYear %> <%= data.term %></a>
+        <% }) %>
         </div>
 
 </body>
