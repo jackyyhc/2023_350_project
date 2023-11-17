@@ -203,6 +203,10 @@ app.get('/academic_record', (req, res) => {
   }
 })
 
+app.get('/assessment', (req, res) => {
+  res.render('teacher_assessment');
+})
+
 
 
 
