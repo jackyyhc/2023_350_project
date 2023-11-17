@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <header>
+        <%- include('teacher_navbar') %>
+    </header>
+    <div><h4>Accessment</h4>
+    </div>
+        <!-- table to show results -->
+        <table class="table">
+            <thead>
+              <tr class="table-secondary">
+                <th scope="col">Course Code</th>
+                <th scope="col">Name</th>
+                <th scope="col">Term</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% results.forEach(function(data){ %>
+              <tr>
+                <td><%= data.courseCode %></td>
+                <td><%= data.courseName %></td>
+                <td><%= data.merge_term %></td>
+                <td><%= data.credit %></td>
+                <td><%= data.grade %></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+
+</body>
+<footer>
+    <%- include('footer') %>
+</footer>
+
+</html>
