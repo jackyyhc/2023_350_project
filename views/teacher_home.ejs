@@ -6,78 +6,35 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <!-- add css -->
     <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
-    <h1>dashboard</h1>
-    <h2>hello, <%= username %>
-    </h2>
-    <p>
-        <% results%>
-    </p>
-    <div class="logout">
-        <form action="/logout" method="GET">
-            <button type="submit">logout</button>
-        </form>
+    <header>
+        <%- include('teacher_navbar') %>
+    </header>
+    <div class="row">
+        <div class="col-md-3 col-sm-4 ">
+            <div class="card">
+                <div class="card-header">Profile</div>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <%= results.userlName %>
+                            <%= results.userfName%>
+                    </h5>
+                    <p class="card-text">
+                        <%= results.admYear%>
+                            <%= results.admTerm %><br>
+                                <%= results.status_desc %><br>Year <%= results.standing%> Standing<br>
+                                        <%= results.programme %> 
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="personal_info">
-        <form action="/personal_information" method="GET">
-            <button type="submit">personal information</button>
-        </form>
-    </div>
-    <div class="search">
-        <form action="/search" method="POST">
-            <input type="text" name="search" placeholder="search by course code">
-            <button type="submit">search</button>
-        </form>
-    </div>
-    <!-- table to show results -->
-    <table>
-        <thead>
-            <tr>
-                <th>Student ID</th>
-                <th>Course Code</th>
-                <th>Course Name</th>
-                <th>Year</th>
-                <th>Term</th>
-                <th>Credit</th>
-                <th>Grade</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% results.forEach(function(data){ %>
-                <tr>
-                    <td>
-                        <%= data.student_id %>
-                    </td>
-                    <td>
-                        <%= data.program_id %>
-                    </td>
-                    <td>
-                        <%= data.course_name %>
-                    </td>
-                    <td>
-                        <%= data.year %>
-                    </td>
-                    <td>
-                        <%= data.term %>
-                    </td>
-                    <td>
-                        <%= data.credit %>
-                    </td>
-                    <td>
-                        <%= data.grade %>
-                    </td>
-                </tr>
-                <% }) %>
-        </tbody>
-
-
-    </table>
-    </div>
-
 </body>
+<footer>
+    <%- include('footer') %>
+</footer>
 
 </html>
