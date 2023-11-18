@@ -13,10 +13,35 @@
     <header>
         <%- include('teacher_navbar') %>
     </header>
+    <div class="container-fluid">
+        <div><h4>Course List</h4>
+          </div>
+          <table class="table">
+            <thead>
+              <tr class="table-secondary">
+                <th scope="col" onclick="sortTable(0)">Course Code</th>
+                <th scope="col" onclick="sortTable(1)">Course Name</th>
+                <th scope="col" onclick="sortTable(2)">Year</th>
+                <th scope="col" onclick="sortTable(3)">Term</th>
+                <th scope="col" onclick="sortTable(4)">Tutor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% results.forEach(function(data){ %>
+              <tr>
+                <td><%= data.courseCode %></td>
+                <td><%= data.courseName %></td>
+                <td><%= data.teachYear %></td>
+                <td><%= data.term %></td>
+                <td><%= data.userfName %> <%= data.userlName %></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table> 
+    </div>
 
 </body>
 <footer>
     <%- include('footer') %>
 </footer>
-
 </html>
