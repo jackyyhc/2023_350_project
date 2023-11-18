@@ -21,3 +21,11 @@ input[type=text] {
     border-bottom: 1px solid black;
     width: 100%;
   }
+  .container-fluid {
+    padding: 3px;
+  }
+  .center{
+    margin:auto;
+    width:60%;
+    padding:10px;
+  }
