@@ -229,7 +229,7 @@ app.get('/home', (req, res) => {
     }
     else if (req.session.role == 'teacher') {
       console.log(username)
-      let sql = 'SELECT Teach.teacherId, Teach.courseCode, Course.courseName, Teach.teachYear, Teach.term FROM 350_group_project.Teach AS Teach LEFT JOIN 350_group_project.Course AS Course ON Teach.courseCode = Course.courseCode WHERE teacherId = ? ';
+      let sql = 'SELECT userId, userfName, userlName FROM 350_group_project.User WHERE userId = ? ';
       connection.query(sql, [username], (error, results, fields) => {
         if (error) throw error;
         else {
@@ -244,7 +244,7 @@ app.get('/home', (req, res) => {
     }
   }
 });
-
+// student
 app.post("/personal_info", (req, res) => {
   if (!req.session.authenticated) {
     res.redirect('/');
@@ -312,6 +312,7 @@ app.get('/personal_information', (req, res) => {
   }
 });
 
+//teacher
 app.get('/assessment', (req, res) => {
   if (!req.session.authenticated) {
     res.redirect('/');
@@ -373,6 +374,78 @@ app.get('/course', (req, res) => {
         else {
           console.log(results);
           res.render('teacher_course',
+          {
+          username: req.session.username,
+          role: req.session.role,
+          results: results,
+        });
+      }
+    })
+  }
+}
+});
+
+app.get('/stu_info', (req, res) => {
+  if (!req.session.authenticated) {
+    res.redirect('/');
+  }
+  else if (req.session.authenticated) {
+    const username = req.session.username;
+    if (req.session.role == 'teacher') {
+      let sql = 'SELECT User.userId, userfName, userfName, userlName, sex, phoneNo, address, admTerm, status, standing, programme FROM 350_group_project.User AS User LEFT JOIN 350_group_project.StudentInfo AS Stud ON User.userId = Stud.userId;'
+      connection.query(sql, [username], (error, results, fields) => {
+        if (error) throw error;
+        else {
+          console.log(results);
+          res.render('teacher_stu_info',
+          {
+          username: req.session.username,
+          role: req.session.role,
+          results: results,
+        });
+      }
+    })
+  }
+}
+});
+
+app.get('/stu_emgContact', (req, res) => {
+  if (!req.session.authenticated) {
+    res.redirect('/');
+  }
+  else if (req.session.authenticated) {
+    const username = req.session.username;
+    if (req.session.role == 'teacher') {
+      let sql = 'SELECT User.userId, userfName, userfName, userlName, emgPerson, emgPhoneNo, relationship FROM 350_group_project.User AS User LEFT JOIN 350_group_project.EmgContact AS EmgContact ON User.userId = EmgContact.userId;'
+      connection.query(sql, [username], (error, results, fields) => {
+        if (error) throw error;
+        else {
+          console.log(results);
+          res.render('teacher_stu_emgContact',
+          {
+          username: req.session.username,
+          role: req.session.role,
+          results: results,
+        });
+      }
+    })
+  }
+}
+});
+
+app.get('/stu_academic', (req, res) => {
+  if (!req.session.authenticated) {
+    res.redirect('/');
+  }
+  else if (req.session.authenticated) {
+    const username = req.session.username;
+    if (req.session.role == 'teacher') {
+      let sql = 'SELECT User.userId, userfName, userfName, userlName, Study.courseCode, courseName, studyYear, term, grade, remarks FROM 350_group_project.User AS User LEFT JOIN 350_group_project.Study AS Study ON User.userId = Study.userId LEFT JOIN 350_group_project.Course AS Course ON Study.courseCode = Course.courseCode;'
+      connection.query(sql, [username], (error, results, fields) => {
+        if (error) throw error;
+        else {
+          console.log(results);
+          res.render('teacher_stu_academic',
           {
           username: req.session.username,
           role: req.session.role,
