@@ -203,33 +203,6 @@ app.get('/academic_record', (req, res) => {
   }
 })
 
-app.get('/assessment', (req, res) => {
-  if (!req.session.authenticated) {
-    res.redirect('/');
-  }
-  else if (req.session.authenticated) {
-    const username = req.session.username;
-    if (req.session.role == 'teacher') {
-      let sql = 'SELECT Teach.teacherId, Teach.courseCode, Course.courseName, Teach.teachYear, Teach.term FROM 350_group_project.Teach AS Teach LEFT JOIN 350_group_project.Course AS Course ON Teach.courseCode = Course.courseCode WHERE teacherId = ? ';
-      connection.query(sql, [username], (error, results, fields) => {
-        if (error) throw error;
-        else {
-          console.log(results);
-          res.render('teacher_assessment',
-          {
-          username: req.session.username,
-          role: req.session.role,
-          results: results,
-        });
-      }
-    })
-  }
-}
-});
-
-
-
-
 app.get('/home', (req, res) => {
   if (!req.session.authenticated) {
     res.redirect('/');
@@ -337,6 +310,54 @@ app.get('/personal_information', (req, res) => {
       })
     }
   }
+});
+
+app.get('/assessment', (req, res) => {
+  if (!req.session.authenticated) {
+    res.redirect('/');
+  }
+  else if (req.session.authenticated) {
+    const username = req.session.username;
+    if (req.session.role == 'teacher') {
+      let sql = 'SELECT Teach.teacherId, Teach.courseCode, Course.courseName, Teach.teachYear, Teach.term FROM 350_group_project.Teach AS Teach LEFT JOIN 350_group_project.Course AS Course ON Teach.courseCode = Course.courseCode WHERE teacherId = ? ';
+      connection.query(sql, [username], (error, results, fields) => {
+        if (error) throw error;
+        else {
+          console.log(results);
+          res.render('teacher_assessment',
+          {
+          username: req.session.username,
+          role: req.session.role,
+          results: results,
+        });
+      }
+    })
+  }
+}
+});
+
+app.get('/class_assessment', (req, res) => {
+  if (!req.session.authenticated) {
+    res.redirect('/');
+  }
+  else if (req.session.authenticated) {
+    const username = req.session.username;
+    if (req.session.role == 'teacher') {
+      let sql = 'SELECT teachId, courseCode, courseName, teachYear, term, studId, studlName, studfName, grade FROM 350_group_project.ClassView WHERE teachId = ?;'
+      connection.query(sql, [username], (error, results, fields) => {
+        if (error) throw error;
+        else {
+          console.log(results);
+          res.render('teacher_class_assessment',
+          {
+          username: req.session.username,
+          role: req.session.role,
+          results: results,
+        });
+      }
+    })
+  }
+}
 });
 
 app.get('/password', (req, res) => {

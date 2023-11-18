@@ -13,19 +13,19 @@
     <header>
         <%- include('teacher_navbar') %>
     </header>
-    <div><h4>Accessment</h4>
-      <h5>Teaching Course</h5>
-    </div>
+    <div class="container-fluid">
+      <div><h4>Accessment</h4>
+        <h5>Teaching Course List</h5>
+      </div>
         <!-- listgroup to show results -->
         <div class="list-group">
           <% results.forEach(function(data){ %>
-          <a href="#" class="list-group-item list-group-item-action"> <%= data.courseCode %> &emsp; <%= data.courseName %> &emsp; <%= data.teachYear %> <%= data.term %></a>
-        <% }) %>
+          <a href="/class_assessment" class="list-group-item list-group-item-action"> <%= data.courseCode %> &emsp; <%= data.courseName %> &emsp; <%= data.teachYear %> <%= data.term %></a>
+          <% }) %>
         </div>
-
+      </div>
 </body>
 <footer>
     <%- include('footer') %>
 </footer>
-
 </html>
