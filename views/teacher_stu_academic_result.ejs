@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Result</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <header>
+        <%- include('teacher_navbar') %>
+    </header>
+    <div class="container-fluid">
+        <div>
+            <h4>Search Result of " <%= theCriteria %> " Academic Record</h4>
+          </div>
+          <!-- table to show all courses-->
+          <div class="table-responsive-lg">
+          <table class="table table-hover">
+            <thead>
+              <tr class="table-secondary table-active">
+                <th scope="col" >Student ID</th>
+                <th scope="col" >Student Name</th>
+                <th scope="col" >Sex</th>
+                <th scope="col" >Admission Year</th>
+                <th scope="col" >Admission Term</th>
+                <th scope="col" >Status</th>
+                <th scope="col" >Standing</th>
+                <th scope="col" >Programme</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% results.forEach(function(data){ %>
+              <tr class="table-active">
+                <td><%= data.userId %></td>
+                <td><%= data.userlName %> <%= data.userfName %></td>
+                <td><%= data.sex %></td>
+                <td><%= data.admYear%></td>
+                <td><%= data.admTerm%></td>
+                <td><%= data.status_desc%></td>
+                <td><%= data.standing%></td>
+                <td><%= data.programme%></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div> 
+    </div>
+
+</body>
+<footer>
+    <%- include('footer') %>
+</footer>
+</html>

@@ -469,7 +469,7 @@ app.get('/teacher_stu_info_result', (req, res) => {
   else if (req.session.authenticated) {
     const username = req.session.username;
     if (req.session.role == 'teacher') {
-      let sql = 'SELECT User.userId, userfName, userfName, userlName, sex, phoneNo, address,admYear, admTerm, status, standing, programme FROM 350_group_project.User AS User LEFT JOIN 350_group_project.StudentInfo AS Stud ON User.userId = Stud.userId;'
+      let sql = 'SELECT User.userId, userfName, userlName, sex, phoneNo, address, admYear, admTerm, status, standing, programme FROM 350_group_project.User AS User LEFT JOIN 350_group_project.StudentInfo AS Stud ON User.userId = Stud.userId;'
       connection.query(sql, [username], (error, results, fields) => {
         if (error) throw error;
         else {
@@ -563,6 +563,30 @@ app.post('/search_stu_emg', (req, res) => {
   }
 });
 
+app.get('/teacher_stu_emg_result', (req, res) => {
+  if (!req.session.authenticated) {
+    res.redirect('/');
+  }
+  else if (req.session.authenticated) {
+    const username = req.session.username;
+    if (req.session.role == 'teacher') {
+      let sql = 'SELECT User.userId, userfName, userlName, emgPerson, emgPhoneNo,relationship FROM 350_group_project.User AS User LEFT JOIN 350_group_project.StudentInfo AS Stud ON User.userId = Stud.userId LEFT JOIN 350_group_project.EmgContact AS Emg ON User.userId = Emg.userId;'
+      connection.query(sql, [username], (error, results, fields) => {
+        if (error) throw error;
+        else {
+          console.log(results);
+          res.render('teacher_stu_emg_result',
+          {
+          username: req.session.username,
+          role: req.session.role,
+          results: results,
+        });
+      }
+    })
+  }
+}
+});
+
 app.get('/teacher_stu_academic', (req, res) => {
   if (!req.session.authenticated) {
     res.redirect('/');
@@ -598,7 +622,7 @@ app.post('/search_stu_academic', (req, res) => {
       if (searchMethod == 'idSearch') {
         const criteria = "%" + req.body.searchId + "%";
         const theCriteria = req.body.searchId;
-        let sql = 'SELECT User.userId, userfName, userfName, userlName, sex, admYear, admTerm, status, standing, programme FROM 350_group_project.User AS User LEFT JOIN 350_group_project.StudentInfo AS Stud ON User.userId = Stud.userId LEFT JOIN 350_group_project.status_information AS Status_info ON Stud.status = Status_info.status WHERE User.userId LIKE ?;'
+        let sql = 'SELECT User.userId, userfName, userlName, sex, admYear, admTerm, status, standing, programme FROM 350_group_project.User AS User LEFT JOIN 350_group_project.StudentInfo AS Stud ON User.userId = Stud.userId LEFT JOIN 350_group_project.status_information AS Status_info ON Stud.status = Status_info.status WHERE User.userId LIKE ?;'
         connection.query(sql, [criteria], (error, results, fields) => {
         if (error) throw error;
         else {
@@ -618,7 +642,7 @@ app.post('/search_stu_academic', (req, res) => {
     }else if (searchMethod == 'nameSearch') {
       const criteria = "%" + req.body.searchName + "%";
       const theCriteria = req.body.searchName;
-      let sql = 'SELECT User.userId, userfName, userfName, userlName, sex, phoneNo, address,admYear, admTerm, status, standing, programme FROM 350_group_project.User AS User LEFT JOIN 350_group_project.StudentInfo AS Stud ON User.userId = Stud.userId LEFT JOIN 350_group_project.status_information AS Status_info ON Stud.status = Status_info.status WHERE UserfName LIKE ? OR UserlName Like ?;'
+      let sql = 'SELECT User.userId, userfName, userlName, sex, admYear, admTerm, status, standing, programme FROM 350_group_project.User AS User LEFT JOIN 350_group_project.StudentInfo AS Stud ON User.userId = Stud.userId LEFT JOIN 350_group_project.status_information AS Status_info ON Stud.status = Status_info.status WHERE UserfName LIKE ? OR UserlName Like ?;'
       connection.query(sql, [criteria, criteria], (error, results, fields) => {
       if (error) throw error;
       else {
@@ -647,7 +671,7 @@ app.get('/teacher_stu_academic_result', (req, res) => {
   else if (req.session.authenticated) {
     const username = req.session.username;
     if (req.session.role == 'teacher') {
-      let sql = 'SELECT teachId, courseCode, courseName, teachYear, term, studId, studlName, studfName, grade FROM 350_group_project.ClassView;'
+      let sql = 'SELECT User.userId, userfName, userlName, sex, admYear, admTerm, status, standing, programme FROM 350_group_project.User AS User LEFT JOIN 350_group_project.StudentInfo AS Stud ON User.userId = Stud.userId LEFT JOIN 350_group_project.status_information AS Status_info ON Stud.status = Status_info.status;'
       connection.query(sql, [username], (error, results, fields) => {
         if (error) throw error;
         else {
