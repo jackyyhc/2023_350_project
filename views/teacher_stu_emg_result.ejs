@@ -15,7 +15,7 @@
     </header>
     <div class="container-fluid">
         <div>
-            <h4>Search Result of " <%= theCriteria %> " Personal Information</h4>
+            <h4>Search Result of " <%= theCriteria %> " Emergency Contact</h4>
           </div>
           <!-- table to show all courses-->
           <div class="table-responsive-lg">
@@ -24,14 +24,9 @@
               <tr class="table-secondary table-active">
                 <th scope="col" >Student ID</th>
                 <th scope="col" >Student Name</th>
-                <th scope="col" >Sex</th>
+                <th scope="col" >Emergency Contact Person</th>
                 <th scope="col" >Phone Number</th>
-                <th scope="col" >Address</th>
-                <th scope="col" >Admission Year</th>
-                <th scope="col" >Admission Term</th>
-                <th scope="col" >Status</th>
-                <th scope="col" >Standing</th>
-                <th scope="col" >Programme</th>
+                <th scope="col" >Relationship</th>
               </tr>
             </thead>
             <tbody>
@@ -39,14 +34,9 @@
               <tr class="table-active">
                 <td><%= data.userId %></td>
                 <td><%= data.userlName %> <%= data.userfName %></td>
-                <td><%= data.sex %></td>
-                <td><%= data.phoneNo %></td>
-                <td><%= data.address%></td>
-                <td><%= data.admYear%></td>
-                <td><%= data.admTerm%></td>
-                <td><%= data.status_desc%></td>
-                <td><%= data.standing%></td>
-                <td><%= data.programme%></td>
+                <td><%= data.emgPerson%></td>
+                <td><%= data.emgPhoneNo%></td>
+                <td><%= data.relationship%></td>
               </tr>
               <% }) %>
             </tbody>

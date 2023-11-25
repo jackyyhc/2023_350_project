@@ -15,24 +15,25 @@
                 <div class="card-body">
                     <div class="search">
                         <!--form for search by student id-->
-                        <form class="row g-3 align-item-center" action="/search_stu_info" method="POST">
+                        <form name="idSearchForm" class="row g-3 align-item-center" novalidate action="/search_stu_info" method="POST">
                             <div class="col-auto">
                               <label for="id" class="col-form-label" >Search By Student ID: </label>
                             </div>
                             <div class="col-auto">
-                              <input type="text" class="form-control" name="searchId" id="studId" value="" placeholder="Enter student ID">
+                              <input type="text" class="form-control" name="searchId" id="studId" value="" placeholder="Enter student ID" required>
                             </div>
                             <div class="col-auto">
                               <button type="submit" class="btn btn-primary" value="idSearch">search</button>
                             </div>   
                         </form>
                         <!--form for search by student name-->
-                        <form class="row g-3 align-item-center" action="/search_stu_info" method="POST">
+                        <form name="nameSearchForm" class="row g-3 align-item-center needs-validation" novalidate action="/search_stu_info" method="POST">
                             <div class="col-auto">
                               <label for="name" class="col-form-label">Search By Student Name: </label>
                             </div>
                             <div class="col-auto">
-                              <input type="text" class="form-control" name="searchName" id="studName" value="" placeholder="Enter student name">
+                              <input type="text" class="form-control" name="searchName" id="studName" value="" placeholder="Enter student name" required>
+                              <div class="invalid-feedback">student name must not be empty</div>
                             </div>
                             <div class="col-auto">
                               <button type="submit" class="btn btn-primary" value="nameSearch">search</button>
