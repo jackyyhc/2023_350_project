@@ -427,7 +427,7 @@ app.post('/search_stu_info', (req, res) => {
           console.log(username);
           console.log(searchMethod);
           console.log(criteria);
-          console.log(results)
+          console.log(results);
           res.render('teacher_stu_info_result',
           {
           username: req.session.username,
@@ -447,7 +447,7 @@ app.post('/search_stu_info', (req, res) => {
         console.log(username);
         console.log(searchMethod);
         console.log(criteria);
-        console.log(results)
+        console.log(results);
         res.render('teacher_stu_info_result',
         {
         username: req.session.username,
@@ -528,7 +528,7 @@ app.post('/search_stu_emg', (req, res) => {
           console.log(username);
           console.log(searchMethod);
           console.log(criteria);
-          console.log(results)
+          console.log(results);
           res.render('teacher_stu_emg_result',
           {
           username: req.session.username,
@@ -548,7 +548,7 @@ app.post('/search_stu_emg', (req, res) => {
         console.log(username);
         console.log(searchMethod);
         console.log(criteria);
-        console.log(results)
+        console.log(results);
         res.render('teacher_stu_emg_result',
         {
         username: req.session.username,
@@ -629,7 +629,7 @@ app.post('/search_stu_academic', (req, res) => {
           console.log(username);
           console.log(searchMethod);
           console.log(criteria);
-          console.log(results)
+          console.log(results);
           res.render('teacher_stu_academic_result',
           {
           username: req.session.username,
@@ -649,7 +649,7 @@ app.post('/search_stu_academic', (req, res) => {
         console.log(username);
         console.log(searchMethod);
         console.log(criteria);
-        console.log(results)
+        console.log(results);
         res.render('teacher_stu_academic_result',
         {
         username: req.session.username,
