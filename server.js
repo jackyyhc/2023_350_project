@@ -39,7 +39,7 @@ app.get("/", (req, res) => {
   console.log(req.session);
   if (!req.session.authenticated) {
     res.render('login.ejs');
-  } else if (req.session.role == 'teacher' || req.session.role == 'student') {
+  } else if (req.session.role == 'teacher' || req.session.role == 'student' || req.session.role == 'admin') {
     res.redirect('/home');
   }
   else {
@@ -50,7 +50,7 @@ app.get("/", (req, res) => {
 app.post("/password_modification", (req, res) => {
   if (!req.session.authenticated) {
     res.redirect('/');
-  } else if (req.session.role == 'teacher' || req.session.role == 'student') {
+  } else if (req.session.role == 'teacher' || req.session.role == 'student'|| req.session.role == 'admin') {
     let sql = 'select password from 350_group_project.User where userId = ?;';
     connection.query(sql, [req.body.student_id], (error, results, fields) => {
       if (error) throw error;
@@ -149,6 +149,20 @@ app.post("/search", (req, res) => {
         }
       })
     }
+    if (req.session.role == 'admin') {
+      let sql = 'SELECT * FROM 350_group_project.User where userId = ?';
+      connection.query(sql, [username, "%" + req.body.search + "%"], (error, results, fields) => {
+        if (error) throw error;
+        else {
+          res.render('admin_home.ejs',
+            {
+              username: req.session.username,
+              role: req.session.role,
+              results: results
+            });
+        }
+      })
+    }
   }
 });
 
@@ -238,6 +252,22 @@ app.get('/home', (req, res) => {
               username: req.session.username,
               role: req.session.role,
               results: results[0],
+            });
+        }
+      })
+    }
+    else if (req.session.role == 'admin') {
+      console.log(username)
+      let sql = 'SELECT userid, userfName, userlName, role FROM 350_group_project.User WHERE userId = ?;'
+      connection.query(sql, [username], (error, results, fields) => {
+        if (error) throw error;
+        else {
+          console.log(results[0]);
+          res.render('admin_home.ejs',
+            {
+              username: req.session.username,
+              role: req.session.role,
+              results: results[0]
             });
         }
       })
@@ -687,6 +717,33 @@ app.get('/teacher_stu_academic_result', (req, res) => {
   }
 }
 });
+// admin
+app.get('/manage_course', (req, res) => {
+  if (!req.session.authenticated) {
+    res.redirect('/');
+  }
+  else if (req.session.authenticated) {
+    const username = req.session.username;
+    if (req.session.role == 'admin') {
+      let sql = 'SELECT teacherId, teachYear, term, userfName, userlName, Teach.courseCode, Course.courseName FROM 350_group_project.Teach AS Teach LEFT JOIN 350_group_project.Course AS Course ON Teach.courseCode = Course.courseCode LEFT JOIN 350_group_project.User AS User ON teacherId = userId;'
+      connection.query(sql, [username], (error, results, fields) => {
+        if (error) throw error;
+        else {
+          console.log(results);
+          res.render('admin_manage_course',
+          {
+          username: req.session.username,
+          role: req.session.role,
+          results: results,
+        });
+      }
+    })
+  }
+}
+});
+
+//#################################
+
 
 app.get('/password', (req, res) => {
   if (!req.session.authenticated) {

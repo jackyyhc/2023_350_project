@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Management</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <header>
+        <%- include('admin_navbar') %>
+    </header>
+    <div class="container-fluid">
+        <div><h4>Course List</h4>
+          </div>
+          <!-- table to show all courses-->
+          <table class="table">
+            <thead>
+              <tr class="table-secondary">
+                <th scope="col">Course Code</th>
+                <th scope="col">Course Name</th>
+                <th scope="col">Year</th>
+                <th scope="col">Term</th>
+                <th scope="col">Tutor</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% results.forEach(function(data){ %>
+              <tr>
+                <td><%= data.courseCode %></td>
+                <td><%= data.courseName %></td>
+                <td><%= data.teachYear %></td>
+                <td><%= data.term %></td>
+                <td><%= data.userfName %> <%= data.userlName %></td>
+                <td><button type="button" class="btn btn-primary">Edit</button></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table> 
+    </div>
+
+</body>
+<footer>
+    <%- include('footer') %>
+</footer>
+</html>
