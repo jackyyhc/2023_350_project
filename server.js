@@ -39,7 +39,7 @@ app.get("/", (req, res) => {
   console.log(req.session);
   if (!req.session.authenticated) {
     res.render('login.ejs');
-  } else if (req.session.role == 'teacher' || req.session.role == 'student') {
+  } else if (req.session.role == 'teacher' || req.session.role == 'student' || req.session.role == 'admin') {
     res.redirect('/home');
   }
   else {
