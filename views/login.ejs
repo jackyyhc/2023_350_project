@@ -10,19 +10,22 @@
 </head>
 <body>
     <div class="container-fluid">
+        <center><h4>Jeff University Academic System</h4></center>
         <div class="d-flex flex-cloumn min-vh-100 justify-content-center align-items-center">
             <div class="card" style="width: 18rem;">
                 <div class="card-header">USER LOGIN</div>
                 <div class="card-body">
                     <div class="login">
-                        <form action="/login" method="POST">
+                        <form class= "needs-validation" novalidate action="/login" method="POST">
                             <div class="mb-3">
                                 <label for="name">Username </label>
-                                <input type="text" name="username" id="name" value="" placeholder="Enter the Username">
+                                <input type="text" name="username" id="name" value="" placeholder="Enter the Username" required>
+                                <div class="invalid-feedback">user id must not be empty</div>
                             </div>
                             <div class="mb-3">
                                 <label for="password">Password </label>
-                                <input type="password"  name="password" id="pw" value="" placeholder="Enter the Password">
+                                <input type="password"  name="password" id="pw" value="" placeholder="Enter the Password" required>
+                                <div class="invalid-feedback">password must not be empty</div>
                             </div>               
                             <button type="submit" class="button" value="login"><span>Login</span></button>
                         </form>
@@ -32,4 +35,29 @@
         </div>
     </div>
 </body>
+<footer>
+    <%- include('footer') %>
+</footer>
 </html>
+
+<script>
+    (function () {
+      'use strict'
+    
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.querySelectorAll('.needs-validation')
+    
+      // Loop over them and prevent submission
+      Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+          form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+              event.preventDefault()
+              event.stopPropagation()
+            }
+    
+            form.classList.add('was-validated')
+          }, false)
+        })
+    })()
+    </script>
