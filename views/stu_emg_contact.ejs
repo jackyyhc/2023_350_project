@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Include any necessary CSS and JS files here -->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+  <header>
+    <!-- navbar -->
+    <%- include('stu_navbar') %>
+  </header>
+  <!-- content -->
+  <div class="container-fluid">
+    <h1>Personal Information</h1>
+
+    <div class="row mb-3">
+      <!-- <label for="contactName" class="col-sm-2 col-form-label">Emergency Contact Person:</label> -->
+      <label for="emgPerson" class="col-sm-2 col-form-label">Emergency Contact Person:</label>
+      <div class="col-sm-5">
+        <input type="text" class="form-control" value="<%= results.emgPerson %>" id="emgPerson" disabled/>
+      </div>
+      <div class="col">
+        <button type="button" class="btn btn-primary" onclick="openUpdateModal('Emergency Contact Person', '<%= results.emgPerson %>','emgPerson')">
+          Edit
+        </button>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <label for="emgPhoneNo" class="col-sm-2 col-form-label">Emergency Contact Phone No.:</label>
+      <div class="col-sm-5">
+        <input type="text" class="form-control" value="<%= results.emgPhoneNo %>" id="emgPhoneNo" disabled/>
+      </div>
+      <div class="col">
+        <button type="button" class="btn btn-primary" onclick="openUpdateModal('Emergency Contact Phone No.', '<%= results.emgPhoneNo %>', 'emgPhoneNo')">
+          Edit
+        </button>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <label for="relationship" class="col-sm-2 col-form-label">Relationship:</label>
+      <div class="col-sm-5">
+        <input type="text" class="form-control" value="<%= results.relationship %>" id="relationship" disabled/>
+      </div>
+      <div class="col">
+        <button type="button" class="btn btn-primary" onclick="openUpdateModal('Relationship', '<%= results.relationship %>','relationship')">
+          Edit
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <form action="/update_emg_info" method="post">
+      <div class="modal fade" id="editFieldModal" tabindex="-1" aria-labelledby="editFieldModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editFieldModalLabel">Update Information</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="newFieldValue" class="col-form-label">New field value:</label>
+                <textarea class="form-control" id="newFieldValue"></textarea>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" id="updateFieldButton" onclick="updateField()">Update</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <footer>
+    <%- include('footer') %>
+  </footer>
+
+  <script>
+    // Function to open the modal with specific field values
+    function openUpdateModal(fieldName, currentValue, fieldId) {
+      // Set the modal title
+      document.getElementById("editFieldModalLabel").innerText = "Update " + fieldName;
+
+      // Set the current field value in the modal
+      document.getElementById("newFieldValue").value = currentValue;
+
+      // Set the field name as a data attribute to use in the updateField function
+      document.getElementById("updateFieldButton").setAttribute("data-field-name", fieldId);
+
+      // Show the modal
+      $("#editFieldModal").modal("show");
+    }
+
+    // Function to handle the update for different fields
+    function updateField() {
+      // get the new field value
+      var newFieldValue = document.getElementById("newFieldValue").value;
+
+      // get the field name from the data attribute
+      var fieldName = document.getElementById("updateFieldButton").getAttribute("data-field-name");
+    
+    // post the new field value to server
+      $.ajax({
+        type: "POST",
+        url: "/emergency_contact",
+        data: {
+          [fieldName]: newFieldValue,
+          // also return session username
+          username: "<%= username %>",
+        },
+        success: function (data) {
+          // update the field value in the page
+          document.getElementById(fieldName).value = newFieldValue;
+        },
+      });
+
+      // close the modal
+      $("#editFieldModal").modal("hide");
+
+      // clear the input
+      document.getElementById("newFieldValue").value = "";
+
+      // alert the user
+      alert("Updated!");
+
+      // refresh the page
+      location.reload();
+    }
+  </script>
+</body>
+</html>
