@@ -334,7 +334,7 @@ app.get("/personal_information", (req, res) => {
     const username = req.session.username;
     if (req.session.role == "student") {
       let sql =
-        "SELECT usertable.userfName, usertable.userlName, person_info_table.sex, person_info_table.phoneNo FROM 350_group_project.User as usertable inner join 350_group_project.StudentInfo as person_info_table ON usertable.userId = person_info_table.userId where usertable.userId = ?;";
+        "SELECT * FROM stu_personal_record where userId = ?;";
       connection.query(sql, [username], (error, results, fields) => {
         if (error) throw error;
         else {
@@ -467,6 +467,38 @@ app.get("/course", (req, res) => {
           });
         }
       });
+    }
+  }
+});
+
+app.get("/course_stu_list", (req, res) => {
+  // get parameter fromurl
+  const courseCode = req.query.courseCode;
+  const teachYear = req.query.teachYear;
+  const term = req.query.term;
+  if (!req.session.authenticated) {
+    res.redirect("/");
+  }
+  if (req.session.authenticated) {
+    const username = req.session.username;
+    if (req.session.role == "teacher") {
+      let sql =
+        "SELECT * FROM class_assessment WHERE courseCode = ? AND teachYear = ? AND term = ?;";
+      connection.query(
+        sql,
+        [courseCode, teachYear, term],
+        (error, results, fields) => {
+          if (error) throw error;
+          else {
+            res.send(results);
+            // res.render("teacher_course_stu_list", {
+            //   username: req.session.username,
+            //   role: req.session.role,
+            //   results: results,
+            // });
+          }
+        }
+      );
     }
   }
 });
