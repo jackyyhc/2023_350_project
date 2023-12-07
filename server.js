@@ -70,10 +70,12 @@ app.post("/password_modification", (req, res) => {
       } else if (req.body.new_password != req.body.confirm_password) {
         res.render("password_issue.ejs", { message: "Password Not Match" });
       } else if (req.body.new_password == "" || password.length < 8) {
-        res.render("password_issue.ejs", {
-          message: "Password Not Satisfied Rule",
-        });
-      } else {
+        res.render("password_issue.ejs", { message: "Password Not Satisfied Rule",});
+      } else if (req.body.new_password == orginal_pw) {
+        res.render("password_issue.ejs", { message: "Password Not Satisfied Rule",});
+      }
+
+       else {
         let sql =
           "SET SQL_SAFE_UPDATES=0;UPDATE 350_group_project.User SET password = ? WHERE userId = ?;SET SQL_SAFE_UPDATES=1;";
         connection.query(
