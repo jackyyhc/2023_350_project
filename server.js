@@ -450,6 +450,36 @@ app.get("/class_assessment", (req, res) => {
     }
   }
 });
+// to be continue
+// app.post("/change_academic_record", (req, res) => {
+//   if (!req.session.authenticated) {
+//     res.redirect("/");
+//   } else if (req.session.role == "teacher") {
+//     const username = req.body.username;
+//     var columnName = Object.keys(req.body)[0];
+//     var sql = `SET SQL_SAFE_UPDATES=0;UPDATE 350_group_project.academic_records SET ${columnName} = ? WHERE student_id = ? and program_id = ?;SET SQL_SAFE_UPDATES=1;`;
+//     connection.query(
+//       sql,
+//       [
+//         req.body[Object.keys(req.body)[0]],
+//         req.body.student_id,
+//         req.body.program_id,
+//       ],
+//       (error, results, fields) => {
+//         if (error) throw error;
+//         if (results[1].affectedRows) {
+//           res.render("teacher_class_assessment", {
+//             username: req.session.username,
+//             role: req.session.role,
+//             results: req.body,
+//             message: "Update successfully!",
+//           });
+//         }
+//       }
+//     );
+//   }
+// }
+// );
 
 app.get("/course", (req, res) => {
   if (!req.session.authenticated) {

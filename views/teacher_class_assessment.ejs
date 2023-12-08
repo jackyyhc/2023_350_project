@@ -33,13 +33,37 @@
                 <td><%= data.studId %></td>
                 <td><%= data.studfName %> <%= data.studlName %></td>
                 <td><%= data.grade %></td>
-                <td><button class="btn btn-primary" type="submit">Update</button></td>
+                <td><button class="btn btn-primary" type="button" onclick="openUpdateModal('Grade', '<%= data.grade %>','grade')">Update</button></td>
               </tr>
               <% }) %>
             </tbody>
           </table>
         </div>
         </div>
+          <!-- Modal -->
+    <form action="/change_academic_record" method="post">
+      <div class="modal fade" id="editFieldModal" tabindex="-1" aria-labelledby="editFieldModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editFieldModalLabel">Update Information</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="newFieldValue" class="col-form-label">New field value:</label>
+                <textarea class="form-control" id="newFieldValue"></textarea>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" id="updateFieldButton" onclick="updateField()">Update</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
     </body>
 <script>
     // sort table
@@ -96,6 +120,64 @@
               }
           }
       }
+    }
+
+        // Function to open the modal with specific field values
+        function openUpdateModal(fieldName, currentValue, fieldId) {
+      // Set the modal title
+      document.getElementById("editFieldModalLabel").innerText = "Update " + fieldName;
+
+      // Set the current field value in the modal
+      document.getElementById("newFieldValue").value = currentValue;
+
+      // Set the field name as a data attribute to use in the updateField function
+      document.getElementById("updateFieldButton").setAttribute("data-field-name", fieldId);
+
+      // Show the modal
+      $("#editFieldModal").modal("show");
+    }
+
+    // Function to handle the update for different fields
+    function updateField() {
+      // get the new field value
+      var newFieldValue = document.getElementById("newFieldValue").value;
+
+      // get the field name from the data attribute
+      var fieldName = document.getElementById("updateFieldButton").getAttribute("data-field-name");
+
+      // check if the field length over 20
+      if (newFieldValue.length > 20) {
+        alert("The length of the field should be less than 20!");
+        return;
+      }
+      
+
+    // post the new field value to server
+      $.ajax({
+        type: "POST",
+        url: "/change_academic_record",
+        data: {
+          [fieldName]: newFieldValue,
+          // also return session username
+          username: "<%= username %>",
+        },
+        success: function (data) {
+          // update the field value in the page
+          document.getElementById(fieldName).value = newFieldValue;
+        },
+      });
+
+      // close the modal
+      $("#editFieldModal").modal("hide");
+
+      // clear the input
+      document.getElementById("newFieldValue").value = "";
+
+      // alert the user
+      alert("Updated!");
+
+      // refresh the page
+      location.reload();
     }
     </script>
 <footer>
