@@ -103,7 +103,14 @@
 
       // get the field name from the data attribute
       var fieldName = document.getElementById("updateFieldButton").getAttribute("data-field-name");
-    
+
+      // check if the field length over 20
+      if (newFieldValue.length > 20) {
+        alert("The length of the field should be less than 20!");
+        return;
+      }
+      
+
     // post the new field value to server
       $.ajax({
         type: "POST",
