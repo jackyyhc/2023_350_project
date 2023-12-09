@@ -12,3 +12,9 @@ to start the server
 <p>To login the system with student role, you may login via</p>
 <p>username: 12000000</p>
 <p>password: 12345678</p>
+<p>To login the system with teacher role, you may login via</p>
+<p>username: 10100001</p>
+<p>password: 12345678</p>
+<p>To login the system with admin role, you may login via</p>
+<p>username: 11111111</p>
+<p>password: 12345678</p>
