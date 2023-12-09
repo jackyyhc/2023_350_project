@@ -432,14 +432,14 @@ app.get("/assessment", (req, res) => {
 
 app.get("/class_assessment", (req, res) => {
   // get parameter fromurl
-  const courseCode = req.query.courseCode;
-  const teachYear = req.query.teachYear;
-  const term = req.query.term;
-  console.log(courseCode);
-  if (!req.session.authenticated) {
+
+  if (!req.session.authenticated && (req.session.role != "teacher" || req.session.role != "admin")) {
     res.redirect("/");
   } else if (req.session.authenticated) {
-    const username = req.session.username;
+      const courseCode = req.query.courseCode;
+      const teachYear = req.query.teachYear;
+      const term = req.query.term;
+      const username = req.session.username;
     if (req.session.role == "teacher") {
       let sql = "SELECT * FROM class_assessment WHERE courseCode = ? AND teachYear = ? AND term = ?;";
       connection.query(sql, [courseCode, teachYear, term], (error, results, fields) => {
@@ -449,42 +449,42 @@ app.get("/class_assessment", (req, res) => {
             username: req.session.username,
             role: req.session.role,
             results: results,
+            courseCode: courseCode,
+            teachYear: teachYear,
+            term: term,
           });
         }
       });
     }
   }
 });
-// to be continue
-// app.post("/change_academic_record", (req, res) => {
-//   if (!req.session.authenticated) {
-//     res.redirect("/");
-//   } else if (req.session.role == "teacher") {
-//     const username = req.body.username;
-//     var columnName = Object.keys(req.body)[0];
-//     var sql = `SET SQL_SAFE_UPDATES=0;UPDATE 350_group_project.academic_records SET ${columnName} = ? WHERE student_id = ? and program_id = ?;SET SQL_SAFE_UPDATES=1;`;
-//     connection.query(
-//       sql,
-//       [
-//         req.body[Object.keys(req.body)[0]],
-//         req.body.student_id,
-//         req.body.program_id,
-//       ],
-//       (error, results, fields) => {
-//         if (error) throw error;
-//         if (results[1].affectedRows) {
-//           res.render("teacher_class_assessment", {
-//             username: req.session.username,
-//             role: req.session.role,
-//             results: req.body,
-//             message: "Update successfully!",
-//           });
-//         }
-//       }
-//     );
-//   }
-// }
-// );
+
+app.post("/change_academic_record", (req, res) => {
+  console.log(req.body);
+  if (!req.session.authenticated) {
+    res.redirect("/");
+  } else if (req.session.role == "teacher") {
+    var sql = `SET SQL_SAFE_UPDATES=0;UPDATE 350_group_project.class_assessment SET grade = ? WHERE studId= ? and courseCode = ? and teachYear = ? AND term = ?;SET SQL_SAFE_UPDATES=1;`;
+      connection.query(
+      sql,
+      [
+        req.body.grade,
+        req.body.student_id,
+        req.body.courseCode,
+        req.body.teachYear,
+        req.body.term,
+      ],
+      (error, results, fields) => {
+        if (error) throw error;
+        if (results[1].affectedRows) {
+          res.redirect("/class_assessment");
+          }
+        }
+      
+    );
+  }
+}
+);
 
 app.get("/course", (req, res) => {
   if (!req.session.authenticated) {

@@ -2,185 +2,201 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Class Accessment</title>
-    <link rel="stylesheet" href="/css/style.css">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Class Accessment</title>
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
-    <header>
-        <%- include('teacher_navbar') %>
-    </header>
-    <div class="container-fluid">
-      <div><h4>Class List</h4>
-        <h5>Result </h5>
-      </div>
-        <!-- table to show class of students who study this course 未做filter-->
-        <table class="table">
-            <thead>
-              <tr class="table-secondary">
-                <th scope="col" onclick="sortTable(0)">Student ID</th>
-                <th scope="col" onclick="sortTable(1)">Student Name</th>
-                <th scope="col" onclick="sortTable(2)">Grade</th>
-                <th>Update</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% results.forEach(function(data){ %>
-              <tr>
-                <td><%= data.studId %></td>
-                <td><%= data.studfName %> <%= data.studlName %></td>
-                <td><%= data.grade %></td>
-                <td><button class="btn btn-primary" type="button" onclick="openUpdateModal('Grade', '<%= data.grade %>','grade')">Update</button></td>
-              </tr>
-              <% }) %>
-            </tbody>
-          </table>
-        </div>
-        </div>
-          <!-- Modal -->
-    <form action="/change_academic_record" method="post">
-      <div class="modal fade" id="editFieldModal" tabindex="-1" aria-labelledby="editFieldModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="editFieldModalLabel">Update Information</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <header>
+    <%- include('teacher_navbar') %>
+  </header>
+  <div class="container-fluid">
+    <div>
+      <h4>Class List</h4>
+      <h5>Result </h5>
+    </div>
+    <!-- table to show class of students who study this course 未做filter-->
+    <table class="table">
+      <thead>
+        <tr class="table-secondary">
+          <th scope="col" onclick="sortTable(0)">Student ID</th>
+          <th scope="col" onclick="sortTable(1)">Student Name</th>
+          <th scope="col" onclick="sortTable(2)">Grade</th>
+          <th>Update</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% results.forEach(function(data){ %>
+          <tr>
+            <td>
+              <%= data.studId %>
+            </td>
+            <td>
+              <%= data.studfName %>
+                <%= data.studlName %>
+            </td>
+            <td>
+              <%= data.grade %>
+            </td>
+            <td><button class="btn btn-primary" type="button"
+                onclick="openUpdateModal('Grade','<%= data.studId %>', '<%= data.grade %>','grade')">Update</button>
+            </td>
+          </tr>
+          <% }) %>
+      </tbody>
+    </table>
+  </div>
+  </div>
+  <!-- Modal -->
+  <form action="/change_academic_record" method="post">
+    <div class="modal fade" id="editFieldModal" tabindex="-1" aria-labelledby="editFieldModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editFieldModalLabel">Update Information</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="newFieldValue" class="col-form-label">New field value:</label>
+              <textarea class="form-control" id="newFieldValue"></textarea>
             </div>
-            <div class="modal-body">
-              <div class="mb-3">
-                <label for="newFieldValue" class="col-form-label">New field value:</label>
-                <textarea class="form-control" id="newFieldValue"></textarea>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" id="updateFieldButton" onclick="updateField()">Update</button>
-            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="updateFieldButton" onclick="updateField()">Update</button>
           </div>
         </div>
       </div>
-    </form>
+    </div>
+  </form>
   </div>
-    </body>
+</body>
 <script>
-    // sort table
-    function sortTable(n) {
-      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-      table = document.querySelector("table");
-      switching = true;
-      // Set the sorting direction to ascending:
-      dir = "asc"; 
-      /* Make a loop that will continue until
-      no switching has been done: */
-      while (switching) {
-          // Start by saying: no switching is done:
-          switching = false;
-          rows = table.rows;
-          /* Loop through all table rows (except the
-          first, which contains table headers): */
-          for (i = 1; i < (rows.length - 1); i++) {
-              // Start by saying there should be no switching:
-              shouldSwitch = false;
-              /* Get the two elements you want to compare,
-              one from current row and one from the next: */
-              x = rows[i].getElementsByTagName("TD")[n];
-              y = rows[i + 1].getElementsByTagName("TD")[n];
-              /* Check if the two rows should switch place,
-              based on the direction, asc or desc: */
-              if (dir == "asc") {
-                  if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                      // If so, mark as a switch and break the loop:
-                      shouldSwitch = true;
-                      break;
-                  }
-              } else if (dir == "desc") {
-                  if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-                      // If so, mark as a switch and break the loop:
-                      shouldSwitch = true;
-                      break;
-                  }
-              }
+  // sort table
+  function sortTable(n) {
+    var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+    table = document.querySelector("table");
+    switching = true;
+    // Set the sorting direction to ascending:
+    dir = "asc";
+    /* Make a loop that will continue until
+    no switching has been done: */
+    while (switching) {
+      // Start by saying: no switching is done:
+      switching = false;
+      rows = table.rows;
+      /* Loop through all table rows (except the
+      first, which contains table headers): */
+      for (i = 1; i < (rows.length - 1); i++) {
+        // Start by saying there should be no switching:
+        shouldSwitch = false;
+        /* Get the two elements you want to compare,
+        one from current row and one from the next: */
+        x = rows[i].getElementsByTagName("TD")[n];
+        y = rows[i + 1].getElementsByTagName("TD")[n];
+        /* Check if the two rows should switch place,
+        based on the direction, asc or desc: */
+        if (dir == "asc") {
+          if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+            // If so, mark as a switch and break the loop:
+            shouldSwitch = true;
+            break;
           }
-          if (shouldSwitch) {
-              /* If a switch has been marked, make the switch
-              and mark that a switch has been done: */
-              rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-              switching = true;
-              // Each time a switch is done, increase this count by 1:
-              switchcount ++; 
-          } else {
-              /* If no switching has been done AND the direction is "asc",
-              set the direction to "desc" and run the while loop again. */
-              if (switchcount == 0 && dir == "asc") {
-                  dir = "desc";
-                  switching = true;
-              }
+        } else if (dir == "desc") {
+          if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+            // If so, mark as a switch and break the loop:
+            shouldSwitch = true;
+            break;
           }
+        }
+      }
+      if (shouldSwitch) {
+        /* If a switch has been marked, make the switch
+        and mark that a switch has been done: */
+        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+        switching = true;
+        // Each time a switch is done, increase this count by 1:
+        switchcount++;
+      } else {
+        /* If no switching has been done AND the direction is "asc",
+        set the direction to "desc" and run the while loop again. */
+        if (switchcount == 0 && dir == "asc") {
+          dir = "desc";
+          switching = true;
+        }
       }
     }
+  }
 
-        // Function to open the modal with specific field values
-        function openUpdateModal(fieldName, currentValue, fieldId) {
-      // Set the modal title
-      document.getElementById("editFieldModalLabel").innerText = "Update " + fieldName;
+  // Function to open the modal with specific field values
+  function openUpdateModal(fieldName, student_id, currentValue, fieldId) {
+    // Set the modal title
+    document.getElementById("editFieldModalLabel").innerText = "Update " +student_id+ ' Grade';
 
-      // Set the current field value in the modal
-      document.getElementById("newFieldValue").value = currentValue;
+    // Set the current field value in the modal
+    document.getElementById("newFieldValue").value = currentValue;
 
-      // Set the field name as a data attribute to use in the updateField function
-      document.getElementById("updateFieldButton").setAttribute("data-field-name", fieldId);
+    // Set the field name as a data attribute to use in the updateField function
+    document.getElementById("updateFieldButton").setAttribute("data-field-name", fieldId);
 
-      // Show the modal
-      $("#editFieldModal").modal("show");
+    // Show the modal
+    $("#editFieldModal").modal("show");
+  }
+
+  // Function to handle the update for different fields
+  function updateField() {
+    // get the new field value
+    var newFieldValue = document.getElementById("newFieldValue").value;
+
+    // get the field name from the data attribute
+    var fieldName = document.getElementById("updateFieldButton").getAttribute("data-field-name");
+
+    var student_id = document.getElementById("editFieldModalLabel").innerText.replace("Update ", "").replace(" Grade", "");
+    // check if the field length over 20
+    if (newFieldValue.length > 20) {
+      alert("The length of the field should be less than 20!");
+      return;
     }
 
-    // Function to handle the update for different fields
-    function updateField() {
-      // get the new field value
-      var newFieldValue = document.getElementById("newFieldValue").value;
-
-      // get the field name from the data attribute
-      var fieldName = document.getElementById("updateFieldButton").getAttribute("data-field-name");
-
-      // check if the field length over 20
-      if (newFieldValue.length > 20) {
-        alert("The length of the field should be less than 20!");
-        return;
-      }
-      
 
     // post the new field value to server
-      $.ajax({
-        type: "POST",
-        url: "/change_academic_record",
-        data: {
-          [fieldName]: newFieldValue,
-          // also return session username
-          username: "<%= username %>",
-        },
-        success: function (data) {
-          // update the field value in the page
-          document.getElementById(fieldName).value = newFieldValue;
-        },
-      });
+    $.ajax({
+      type: "POST",
+      url: "/change_academic_record",
+      data: {
+        [fieldName]: newFieldValue,
+        student_id: student_id,
+        // also return session username
+        username: "<%= username %>",
+        courseCode: "<%= courseCode %>",
+        teachYear: "<%= teachYear %>",
+        term: "<%= term %>",
+      },
+      success: function (data) {
+        // update the field value in the page
+        document.getElementById(fieldName).value = newFieldValue;
+      },
+    });
 
-      // close the modal
-      $("#editFieldModal").modal("hide");
+    // close the modal
+    $("#editFieldModal").modal("hide");
 
-      // clear the input
-      document.getElementById("newFieldValue").value = "";
+    // clear the input
+    document.getElementById("newFieldValue").value = "";
 
-      // alert the user
-      alert("Updated!");
+    // alert the user
+    alert("Updated!");
 
-      // refresh the page
-      location.reload();
-    }
-    </script>
+    // refresh the page
+    location.reload();
+  }
+</script>
 <footer>
-    <%- include('footer') %>
+  <%- include('footer') %>
 </footer>
+
 </html>
