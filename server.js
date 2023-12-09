@@ -70,12 +70,12 @@ app.post("/password_modification", (req, res) => {
       } else if (req.body.new_password != req.body.confirm_password) {
         res.render("password_issue.ejs", { message: "Password Not Match" });
       } else if (req.body.new_password == "" || password.length < 8) {
-        res.render("password_issue.ejs", { message: "Password Not Satisfied Rule",});
+        res.render("password_issue.ejs", { message: "Password Not Satisfied Rule", });
       } else if (req.body.new_password == orginal_pw) {
-        res.render("password_issue.ejs", { message: "Password Not Satisfied Rule",});
+        res.render("password_issue.ejs", { message: "Password Not Satisfied Rule", });
       }
 
-       else {
+      else {
         let sql =
           "SET SQL_SAFE_UPDATES=0;UPDATE 350_group_project.User SET password = ? WHERE userId = ?;SET SQL_SAFE_UPDATES=1;";
         connection.query(
@@ -383,7 +383,7 @@ app.get("/emergency_contact", (req, res) => {
   }
 });
 app.post("/delete_course", (req, res) => {
-  if (!req.session.authenticated && req.session.role !="admin") {
+  if (!req.session.authenticated && req.session.role != "admin") {
     res.redirect("/");
   } else if (req.session.role == "admin") {
     console.log(req.body)
@@ -392,11 +392,11 @@ app.post("/delete_course", (req, res) => {
     const term = req.body.term;
     console.log(courseCode, teachYear, term)
     let sql =
-      `SET SQL_SAFE_UPDATES=0;`+
-      `DELETE FROM 350_group_project.Teach WHERE courseCode = ? AND teachYear = ? AND term = ?;`+
+      `SET SQL_SAFE_UPDATES=0;` +
+      `DELETE FROM 350_group_project.Teach WHERE courseCode = ? AND teachYear = ? AND term = ?;` +
       `SET SQL_SAFE_UPDATES=1;`;
-      connection.query(sql, [courseCode, teachYear, term], (error, results, fields) => {
-        console.log(results);
+    connection.query(sql, [courseCode, teachYear, term], (error, results, fields) => {
+      console.log(results);
       if (error) throw error;
       else {
         res.redirect("/manage_course");
@@ -458,10 +458,10 @@ app.get("/class_assessment", (req, res) => {
   if (!req.session.authenticated && (req.session.role != "teacher" || req.session.role != "admin")) {
     res.redirect("/");
   } else if (req.session.authenticated) {
-      const courseCode = req.query.courseCode;
-      const teachYear = req.query.teachYear;
-      const term = req.query.term;
-      const username = req.session.username;
+    const courseCode = req.query.courseCode;
+    const teachYear = req.query.teachYear;
+    const term = req.query.term;
+    const username = req.session.username;
     if (req.session.role == "teacher") {
       let sql = "SELECT * FROM class_assessment WHERE courseCode = ? AND teachYear = ? AND term = ?;";
       connection.query(sql, [courseCode, teachYear, term], (error, results, fields) => {
@@ -487,7 +487,7 @@ app.post("/change_academic_record", (req, res) => {
     res.redirect("/");
   } else if (req.session.role == "teacher") {
     var sql = `SET SQL_SAFE_UPDATES=0;UPDATE 350_group_project.class_assessment SET grade = ? WHERE studId= ? and courseCode = ? and teachYear = ? AND term = ?;SET SQL_SAFE_UPDATES=1;`;
-      connection.query(
+    connection.query(
       sql,
       [
         req.body.grade,
@@ -500,9 +500,9 @@ app.post("/change_academic_record", (req, res) => {
         if (error) throw error;
         if (results[1].affectedRows) {
           res.redirect("/class_assessment");
-          }
         }
-      
+      }
+
     );
   }
 }
@@ -583,6 +583,62 @@ app.get("/teacher_stu_info", (req, res) => {
     }
   }
 });
+app.get("/student_info", (req, res) => {
+  if (!req.session.authenticated && req.session.role != "admin") {
+    res.redirect("/");
+  } else if (req.session.role == "admin") {
+    let sql =
+      "SELECT User.userId, userfName, userlName, sex, phoneNo, address, admYear, admTerm, status_desc, standing, programme FROM 350_group_project.User AS User LEFT JOIN 350_group_project.StudentInfo AS Stud ON User.userId = Stud.userId LEFT JOIN 350_group_project.status_information AS Status_info ON Stud.status = Status_info.status";
+    connection.query(sql, [], (error, results, fields) => {
+      if (error) throw error;
+      else {
+        res.render("admin_all_stu_record", {
+          username: req.session.username,
+          role: req.session.role,
+          results: results,
+        })
+      }
+    })
+  }
+})
+
+app.get("/emg_info", (req, res) => {
+  if (!req.session.authenticated && req.session.role != "admin") {
+    res.redirect("/");
+  } else if (req.session.role == "admin") {
+    let sql =
+      "SELECT User.userId, userfName, userlName, emgPerson, emgPhoneNo,relationship FROM 350_group_project.User AS User LEFT JOIN 350_group_project.StudentInfo AS Stud ON User.userId = Stud.userId LEFT JOIN 350_group_project.EmgContact AS Emg ON User.userId = Emg.userId;";
+    connection.query(sql, [], (error, results, fields) => {
+      if (error) throw error;
+      else {
+        res.render("admin_all_stu_emg_record", {
+          username: req.session.username,
+          role: req.session.role,
+          results: results,
+        })
+      }
+    })
+  }
+})
+app.get("/acad_info", (req, res) => {
+  if (!req.session.authenticated && req.session.role != "admin") {
+    res.redirect("/");
+  } else if (req.session.role == "admin") {
+    let sql =
+      "SELECT User.userId, userfName, userlName, sex, admYear, admTerm, status_desc, standing, programme FROM 350_group_project.User AS User LEFT JOIN 350_group_project.StudentInfo AS Stud ON User.userId = Stud.userId LEFT JOIN 350_group_project.status_information AS Status_info ON Stud.status = Status_info.status;";
+    connection.query(sql, [], (error, results, fields) => {
+      if (error) throw error;
+      else {
+        res.render("admin_all_stu_acad_record", {
+          username: req.session.username,
+          role: req.session.role,
+          results: results,
+        })
+      }
+    })
+  }
+})
+
 
 app.post("/search_stu_info", (req, res) => {
   if (!req.session.authenticated) {
@@ -875,10 +931,10 @@ app.post("/change_course_info", (req, res) => {
     let sql =
       `SET SQL_SAFE_UPDATES=0;UPDATE 350_group_project.manage_course SET courseName = ? WHERE courseCode = ?; UPDATE 350_group_project.manage_course SET teachYear = ? WHERE courseCode = ?; UPDATE 350_group_project.manage_course SET term = ? WHERE courseCode = ?; UPDATE 350_group_project.manage_course SET teacherId = ? WHERE courseCode = ?;SET SQL_SAFE_UPDATES=1;`;
 
-      connection.query(sql, [courseName, courseCode, teachYear, courseCode, term, courseCode, teacherId, courseCode], (error, results, fields) => {
-        console.log(results);
+    connection.query(sql, [courseName, courseCode, teachYear, courseCode, term, courseCode, teacherId, courseCode], (error, results, fields) => {
+      console.log(results);
       if (error) throw error;
-      
+
       else {
         res.redirect("/manage_course");
       }
@@ -886,8 +942,25 @@ app.post("/change_course_info", (req, res) => {
   }
 }
 );
-
-
+app.get("/user_management", (req, res) => {
+  if (!req.session.authenticated && req.session.role != "admin") {
+    res.redirect("/");
+  } else if (req.session.role == "admin") {
+    let sql =
+      "SELECT * FROM 350_group_project.User;";
+    connection.query(sql, [], (error, results, fields) => {
+      if (error) throw error;
+      else {
+        res.render("admin_user_management", {
+          username: req.session.username,
+          role: req.session.role,
+          results: results,
+        })
+      }
+    })
+  }
+}
+);
 //#################################
 
 app.get("/password", (req, res) => {

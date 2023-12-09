@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View all student emgergency record</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <header>
+        <%- include('admin_navbar') %>
+    </header>
+    <div class="container-fluid">
+          <!-- table to show all courses-->
+          <div class="table-responsive-lg">
+          <table class="table table-hover">
+            <thead>
+              <tr class="table-secondary table-active">
+                <th scope="col" >Student ID</th>
+                <th scope="col" >Student Name</th>
+                <th scope="col" >Emergency Contact Person</th>
+                <th scope="col" >Phone Number</th>
+                <th scope="col" >Relationship</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% results.forEach(function(data){ %>
+              <tr class="table-active">
+                <td><%= data.userId %></td>
+                <td><%= data.userlName %> <%= data.userfName %></td>
+                <td><%= data.emgPerson%></td>
+                <td><%= data.emgPhoneNo%></td>
+                <td><%= data.relationship%></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div> 
+    </div>
+
+</body>
+<footer>
+    <%- include('footer') %>
+</footer>
+</html>
