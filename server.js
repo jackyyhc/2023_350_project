@@ -431,13 +431,18 @@ app.get("/assessment", (req, res) => {
 });
 
 app.get("/class_assessment", (req, res) => {
+  // get parameter fromurl
+  const courseCode = req.query.courseCode;
+  const teachYear = req.query.teachYear;
+  const term = req.query.term;
+  console.log(courseCode);
   if (!req.session.authenticated) {
     res.redirect("/");
   } else if (req.session.authenticated) {
     const username = req.session.username;
     if (req.session.role == "teacher") {
-      let sql = "SELECT * FROM class_assessment";
-      connection.query(sql, [username], (error, results, fields) => {
+      let sql = "SELECT * FROM class_assessment WHERE courseCode = ? AND teachYear = ? AND term = ?;";
+      connection.query(sql, [courseCode, teachYear, term], (error, results, fields) => {
         if (error) throw error;
         else {
           res.render("teacher_class_assessment", {

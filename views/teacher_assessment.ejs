@@ -20,7 +20,7 @@
         <!-- listgroup to show the course teach by that teacher-->
         <div class="list-group">
           <% results.forEach(function(data){ %>
-          <a href="/class_assessment" name="<%=data.courseCode%>" class="list-group-item list-group-item-action"> <%= data.courseCode %> &emsp; <%= data.courseName %> &emsp; <%= data.teachYear %> <%= data.term %></a>
+          <a href="/class_assessment?courseCode=<%= data.courseCode %>&teachYear=<%= data.teachYear %>&term=<%= data.term %>" name="<%=data.courseCode%>" class="list-group-item list-group-item-action"> <%= data.courseCode %> &emsp; <%= data.courseName %> &emsp; <%= data.teachYear %> <%= data.term %></a>
           <% }) %>
         </div>
       </div>
