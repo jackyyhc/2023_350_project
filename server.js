@@ -382,6 +382,28 @@ app.get("/emergency_contact", (req, res) => {
     });
   }
 });
+app.post("/delete_course", (req, res) => {
+  if (!req.session.authenticated && req.session.role !="admin") {
+    res.redirect("/");
+  } else if (req.session.role == "admin") {
+    console.log(req.body)
+    const courseCode = req.body.courseCode;
+    const teachYear = req.body.year;
+    const term = req.body.term;
+    console.log(courseCode, teachYear, term)
+    let sql =
+      `SET SQL_SAFE_UPDATES=0;`+
+      `DELETE FROM 350_group_project.Teach WHERE courseCode = ? AND teachYear = ? AND term = ?;`+
+      `SET SQL_SAFE_UPDATES=1;`;
+      connection.query(sql, [courseCode, teachYear, term], (error, results, fields) => {
+        console.log(results);
+      if (error) throw error;
+      else {
+        res.redirect("/manage_course");
+      }
+    });
+  }
+})
 
 app.post("/emergency_contact", (req, res) => {
   if (!req.session.authenticated) {
@@ -823,7 +845,7 @@ app.get("/manage_course", (req, res) => {
     const username = req.session.username;
     if (req.session.role == "admin") {
       let sql =
-        "SELECT teacherId, teachYear, term, userfName, userlName, Teach.courseCode, Course.courseName FROM 350_group_project.Teach AS Teach LEFT JOIN 350_group_project.Course AS Course ON Teach.courseCode = Course.courseCode LEFT JOIN 350_group_project.User AS User ON teacherId = userId;";
+        "SELECT * from manage_course;";
       connection.query(sql, [username], (error, results, fields) => {
         if (error) throw error;
         else {
@@ -837,6 +859,34 @@ app.get("/manage_course", (req, res) => {
     }
   }
 });
+
+app.post("/change_course_info", (req, res) => {
+  console.log(req.body)
+  // res.redirect("/manage_course");
+  if (!req.session.authenticated && req.session.role != "admin") {
+    res.redirect("/");
+  } else if (req.session.role == "admin") {
+    const courseCode = req.body.courseCode;
+    const courseName = req.body.courseName;
+    const teachYear = req.body.teachYear;
+    const term = req.body.term;
+    const teacherId = req.body.teacherId;
+    console.log(courseCode, courseName, teachYear, term, teacherId)
+    let sql =
+      `SET SQL_SAFE_UPDATES=0;UPDATE 350_group_project.manage_course SET courseName = ? WHERE courseCode = ?; UPDATE 350_group_project.manage_course SET teachYear = ? WHERE courseCode = ?; UPDATE 350_group_project.manage_course SET term = ? WHERE courseCode = ?; UPDATE 350_group_project.manage_course SET teacherId = ? WHERE courseCode = ?;SET SQL_SAFE_UPDATES=1;`;
+
+      connection.query(sql, [courseName, courseCode, teachYear, courseCode, term, courseCode, teacherId, courseCode], (error, results, fields) => {
+        console.log(results);
+      if (error) throw error;
+      
+      else {
+        res.redirect("/manage_course");
+      }
+    });
+  }
+}
+);
+
 
 //#################################
 

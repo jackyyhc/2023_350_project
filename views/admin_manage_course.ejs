@@ -26,24 +26,166 @@
                 <th scope="col">Term</th>
                 <th scope="col">Tutor</th>
                 <th scope="col"></th>
+                <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
               <% results.forEach(function(data){ %>
               <tr>
                 <td><%= data.courseCode %></td>
-                <td><%= data.courseName %></td>
+                <td><%= data.CourseName %></td>
                 <td><%= data.teachYear %></td>
                 <td><%= data.term %></td>
                 <td><%= data.userfName %> <%= data.userlName %></td>
-                <td><button type="button" class="btn btn-primary">Edit</button></td>
+                <td><button type="button" class="btn btn-primary" onclick="openUpdateModal('<%= data.courseCode %>','<%= data.CourseName%>','<%= data.teachYear %>','<%= data.term %>','<%= data.teacherId%>')">Edit</button></td>
+                <td><button type="button" class="btn btn-primary" onclick=" openDeleteModal('<%= data.courseCode %>','<%= data.teachYear %>','<%= data.term %>')">Delete</button></td>
+            
               </tr>
               <% }) %>
             </tbody>
           </table> 
     </div>
+    <form action="/change_course_info" method="post">
+      <div class="modal fade" id="editFieldModal" tabindex="-1" aria-labelledby="editFieldModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editFieldModalLabel">Update Information</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="newFieldValue" class="col-form-label">Course Name</label>
+                <textarea cols="40" rows="1" class="form-control" id="courseName"></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="newFieldValue" class="col-form-label">Year:</label>
+                <textarea cols="40" rows="1" class="form-control" id="year"></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="newFieldValue" class="col-form-label">Term:</label>
+                <textarea cols="40" rows="1" class="form-control" id="Term"></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="newFieldValue" class="col-form-label">TeacherID:</label>
+                <textarea cols="40" rows="1" class="form-control" id="TeacherID"></textarea>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" id="updateFieldButton" onclick="updateField()">Update</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <!-- create a modal for two button -->
+    <div class="modal fade" id="deleteFieldModal" tabindex="-1" aria-labelledby="FieldModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="FieldModalLabel">Update Information</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="delete_course_label" class="col-form-label">Are you sure you want to delete this course?</label>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <form action="/delete_course" method="post">
+              <button type="submit" class="btn btn-primary" id="updateFieldButton">Delete</button>
+              <input type="hidden" name="courseCode" id="courseCode">
+              <input type="hidden" name="username" value="<%= username %>">
+              <input  name="term" id="term">
+              <input  name="year" id="delete_year">
+            </form>
+
+        </div>
+
+      </div>
+    </div>
+
 
 </body>
+<script>
+  $('textarea').on('keyup', function(){
+  $(this).val($(this).val().replace(/[\r\n\v]+/g, ''));
+});
+// create a funtion to open a model contain two button
+// delete and cancel
+function openDeleteModal(courseCode, year, term) {
+    // Set the modal title
+    document.getElementById("FieldModalLabel").innerText = "Delete " + courseCode;
+    // Set modal value
+    document.getElementById("courseCode").value = courseCode;
+    document.getElementById("term").value = term;
+    document.getElementById("delete_year").value = year;
+    // console.log(year)
+    // Show the modal
+    $("#deleteFieldModal").modal("show");
+  }
+
+  // Function to open the modal with specific field values
+function openUpdateModal(courseCode, CourseName, year, term, teacherId) {
+    // Set the modal title
+    document.getElementById("editFieldModalLabel").innerText = "Update " +courseCode;
+    // Set modal value
+    document.getElementById("courseName").value = CourseName;
+    document.getElementById("year").value = year;
+    document.getElementById("Term").value = term;
+    document.getElementById("TeacherID").value = teacherId;
+    // Show the modal
+    $("#editFieldModal").modal("show");
+  }
+
+  // Function to handle the update for different fields
+  function updateField() {
+    // get the new field value
+    // var newFieldValue = document.getElementById("newFieldValue").value;
+
+    // get the field name from the data attribute
+    var courseCode = document.getElementById("editFieldModalLabel").innerText.replace("Update ", "");
+    var courseName = document.getElementById("courseName").value;
+    var year = document.getElementById("year").value;
+    var term = document.getElementById("Term").value;
+    var teacherId = document.getElementById("TeacherID").value;
+    // post the new field value to server
+    $.ajax({
+      type: "POST",
+      url: "/change_course_info",
+      data: {
+        courseCode: courseCode,
+        courseName: courseName,
+        teachYear: year,
+        term: term,
+        teacherId: teacherId,
+        // also return session username
+        username: "<%= username %>",
+        // courseCode: "",
+      },
+      success: function (data) {
+        // update the field value in the page
+        // document.getElementById(fieldName).value = newFieldValue;
+      },
+    });
+
+    // close the modal
+    $("#editFieldModal").modal("hide");
+
+    // clear the input
+    // document.getElementById("newFieldValue").value = "";
+
+    // alert the user
+    alert("Updated!");
+
+    // refresh the page
+    location.reload();
+  }
+</script>
 <footer>
     <%- include('footer') %>
 </footer>
